@@ -63,12 +63,10 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/followups", followupRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-<<<<<<< HEAD
 app.use("/api/transcripts", transcriptRoutes);
 app.use("/api/chatbot", chatbotRoutes);
-=======
+
 app.use("/api/bloodbank", bloodbankRoutes);
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 app.use("/health", healthRoutes);
 
 // Global Error Handler
