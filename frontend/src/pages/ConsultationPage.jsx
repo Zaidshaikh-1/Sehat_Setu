@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { api } from "../utils/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useWebRTC } from "../hooks/useWebRTC.js";
+import { searchDrugs } from "../hooks/useDrugSearch.js";
 import {
   Stethoscope,
   Video,
@@ -24,6 +26,12 @@ import {
   ScrollText,
   Sparkles,
   Radio,
+  Copy,
+  Check,
+  Pill,
+  Search,
+  ExternalLink,
+  Users,
 } from "lucide-react";
 
 // ─── Live Transcription Panel Component ────────────────────────────
@@ -403,6 +411,109 @@ function LiveTranscriptionPanel({
   );
 }
 
+// ─── Fuzzy Search Medicine Autocomplete Input ─────────────────────
+function MedicineAutocompleteInput({ value, onChange, onSelectDrug }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const suggestions = React.useMemo(() => {
+    return searchDrugs(value, 6);
+  }, [value]);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (drug) => {
+    onChange(drug.name);
+    if (onSelectDrug) {
+      onSelectDrug(drug);
+    }
+    setIsOpen(false);
+  };
+
+  const categoryColors = {
+    "Antibiotics": "bg-blue-50 text-blue-700 border-blue-200",
+    "Antihypertensives": "bg-purple-50 text-purple-700 border-purple-200",
+    "Antidiabetic": "bg-amber-50 text-amber-700 border-amber-200",
+    "Analgesics / Antipyretics": "bg-rose-50 text-rose-700 border-rose-200",
+    "Maternal / Iron-Folic": "bg-pink-50 text-pink-700 border-pink-200",
+    "Pediatric / ORS": "bg-emerald-50 text-emerald-700 border-emerald-200",
+    "Emergency / Life-Saving": "bg-red-100 text-red-800 border-red-300 font-bold",
+    "GI / Antacids": "bg-teal-50 text-teal-700 border-teal-200",
+    "Respiratory": "bg-cyan-50 text-cyan-700 border-cyan-200",
+    "Antiallergic": "bg-indigo-50 text-indigo-700 border-indigo-200",
+    "Vitamins / Supplements": "bg-lime-50 text-lime-800 border-lime-200",
+    "Dermatological": "bg-orange-50 text-orange-700 border-orange-200",
+  };
+
+  return (
+    <div ref={containerRef} className="relative flex-1">
+      <div className="relative flex items-center">
+        <input
+          type="text"
+          placeholder="Search drug name (e.g. Amox, Paracetamol, Iron, Telmi)..."
+          value={value}
+          onFocus={() => setIsOpen(true)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setIsOpen(true);
+          }}
+          className="w-full pl-8 pr-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-700 shadow-2xs text-slate-800"
+        />
+        <Pill className="w-3.5 h-3.5 text-teal-700 absolute left-2.5 pointer-events-none" />
+      </div>
+
+      {/* Fuzzy Suggestions Dropdown */}
+      {isOpen && suggestions.length > 0 && (
+        <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-[#D3D4C0] rounded-2xl shadow-xl z-50 overflow-hidden max-h-64 overflow-y-auto animate-fadeIn">
+          <div className="bg-[#FAF7F2] px-3 py-1.5 border-b border-[#D3D4C0] flex items-center justify-between text-[10px] font-mono text-slate-500 font-bold">
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-teal-700" />
+              NLEM Essential Medicines Autocomplete
+            </span>
+            <span>{suggestions.length} matches</span>
+          </div>
+
+          <div className="divide-y divide-slate-100">
+            {suggestions.map((drug, idx) => (
+              <button
+                type="button"
+                key={idx}
+                onClick={() => handleSelect(drug)}
+                className="w-full px-3.5 py-2.5 text-left hover:bg-teal-50/70 transition-colors flex flex-col gap-1 cursor-pointer border-none bg-transparent"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-[#1f2229] font-sans">
+                    {drug.name}
+                  </span>
+                  <span
+                    className={`text-[9px] font-mono px-2 py-0.5 rounded-full border ${
+                      categoryColors[drug.category] || "bg-slate-100 text-slate-600 border-slate-200"
+                    }`}
+                  >
+                    {drug.category}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-mono text-slate-500">
+                  <span>Generic: <strong className="text-slate-700">{drug.genericName}</strong></span>
+                  <span className="text-teal-800 font-semibold">{drug.frequency} · {drug.duration}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Consultation Page ────────────────────────────────────────
 export function ConsultationPage() {
   const { patientId } = useParams();
@@ -413,8 +524,47 @@ export function ConsultationPage() {
   const [selectedPatientId, setSelectedPatientId] = useState(patientId || activePatient?._id || "");
   const [facilities, setFacilities] = useState([]);
   const [mode, setMode] = useState("video");
-  const [isVideoMuted, setIsVideoMuted] = useState(false);
-  const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  // Active patient reference
+  const currentPatient = patients?.find((p) => p._id === selectedPatientId) || activePatient || patients?.[0];
+  const callRoomId = selectedPatientId || currentPatient?._id || "teleconsult-101";
+
+  // WebRTC Video/Voice Calling Hook
+  const localVideoRef = useRef(null);
+  const remoteVideoRef = useRef(null);
+
+  const {
+    localStream,
+    remoteStream,
+    isConnected: isCallConnected,
+    isCallActive,
+    isAudioMuted,
+    isVideoMuted,
+    remoteUser,
+    callStatus,
+    startCall,
+    endCall,
+    toggleAudio,
+    toggleVideo,
+  } = useWebRTC({
+    roomId: callRoomId,
+    userName: user?.name || "Dr. Prakash Sharma",
+    userRole: "doctor",
+    autoStart: true,
+  });
+
+  useEffect(() => {
+    if (localVideoRef.current && localStream) {
+      localVideoRef.current.srcObject = localStream;
+    }
+  }, [localStream]);
+
+  useEffect(() => {
+    if (remoteVideoRef.current && remoteStream) {
+      remoteVideoRef.current.srcObject = remoteStream;
+    }
+  }, [remoteStream]);
 
   // Transcript state
   const [transcriptId, setTranscriptId] = useState(null);
@@ -470,8 +620,6 @@ export function ConsultationPage() {
 
     return () => {};
   }, []);
-
-  const currentPatient = patients?.find((p) => p._id === selectedPatientId) || activePatient || patients?.[0];
 
 
   const handleAddMedicine = () => {
@@ -581,47 +729,128 @@ export function ConsultationPage() {
         {/* Left: Video Feed + Transcription (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {/* Video Panel */}
-          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[360px] text-white">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-                <span>WebRTC Stream Active</span>
-              </span>
+          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-5 shadow-xs flex flex-col justify-between min-h-[420px] text-white relative overflow-hidden">
+            {/* Video Header Bar */}
+            <div className="flex items-center justify-between gap-2 flex-wrap pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-1.5">
+                <span className="px-2.5 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${isCallConnected ? "bg-teal-400 animate-pulse" : "bg-amber-400"}`} />
+                  <span>{isCallConnected ? "Live Peer Connected" : "Room Ready"}</span>
+                </span>
+              </div>
 
-              <div className="flex bg-slate-800 rounded-xl p-0.5 text-[10px] font-mono">
+              <div className="flex items-center gap-1.5">
+                {/* Copy Patient/ASHA Invite Link */}
                 <button
-                  onClick={() => setMode("video")}
-                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${
-                    mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
-                  }`}
+                  type="button"
+                  onClick={() => {
+                    const joinUrl = `${window.location.origin}/call/${callRoomId}`;
+                    navigator.clipboard.writeText(joinUrl);
+                    setLinkCopied(true);
+                    setTimeout(() => setLinkCopied(false), 2500);
+                  }}
+                  className="px-2.5 py-1 bg-slate-800 hover:bg-teal-900 border border-slate-700 text-teal-300 hover:text-white rounded-xl text-[10px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all"
+                  title="Copy shareable link for ASHA worker or patient on 2nd device"
                 >
-                  Video
+                  {linkCopied ? (
+                    <>
+                      <Check className="w-3 h-3 text-teal-400" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-3 h-3 text-teal-400" />
+                      <span>ASHA Link</span>
+                    </>
+                  )}
                 </button>
-                <button
-                  onClick={() => setMode("voice")}
-                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${
-                    mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
-                  }`}
-                >
-                  Voice
-                </button>
+
+                {/* Video / Voice Toggle */}
+                <div className="flex bg-slate-800 rounded-xl p-0.5 text-[10px] font-mono">
+                  <button
+                    type="button"
+                    onClick={() => setMode("video")}
+                    className={`px-2 py-1 rounded-lg cursor-pointer border-none transition-all ${
+                      mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
+                    }`}
+                  >
+                    Video
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode("voice")}
+                    className={`px-2 py-1 rounded-lg cursor-pointer border-none transition-all ${
+                      mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
+                    }`}
+                  >
+                    Voice
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="my-auto flex flex-col items-center justify-center gap-3 py-6">
-              <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-teal-500/40 flex items-center justify-center">
-                <Stethoscope className="w-8 h-8 text-teal-400" />
-              </div>
-              <div className="text-center">
-                <h4 className="text-base font-serif font-bold text-white">{currentPatient?.name || "Patient"}</h4>
-                <p className="text-xs text-slate-400 font-mono">
-                  Assisted by ASHA Meera · Rampur Sub-Centre
-                </p>
+            {/* Video Canvas Area */}
+            <div className="my-auto relative w-full aspect-video min-h-[220px] bg-black/40 rounded-2xl border border-slate-800 overflow-hidden flex items-center justify-center my-3">
+              {/* Remote Video Stream (Patient/ASHA) */}
+              {remoteStream ? (
+                <video
+                  ref={remoteVideoRef}
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-2.5 py-4 text-center px-4">
+                  <div className="w-14 h-14 rounded-full bg-slate-800 border-2 border-teal-500/40 flex items-center justify-center">
+                    <Stethoscope className="w-7 h-7 text-teal-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-serif font-bold text-white">{currentPatient?.name || "Patient Feed"}</h4>
+                    <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                      {isCallConnected
+                        ? "Audio stream receiving..."
+                        : "Waiting for ASHA / Patient on 2nd device"}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const joinUrl = `${window.location.origin}/call/${callRoomId}`;
+                      navigator.clipboard.writeText(joinUrl);
+                      setLinkCopied(true);
+                      setTimeout(() => setLinkCopied(false), 2500);
+                    }}
+                    className="mt-1 px-3 py-1.5 bg-teal-900/60 hover:bg-teal-800 border border-teal-600/50 rounded-xl text-[10px] font-mono text-teal-200 flex items-center gap-1.5 cursor-pointer transition-all"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>{linkCopied ? "Link Copied to Clipboard!" : "Copy /call Link for 2nd Device"}</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Local Doctor Video PIP Overlay */}
+              <div className="absolute bottom-2.5 right-2.5 w-24 sm:w-32 aspect-video bg-slate-900 border border-teal-500/50 rounded-xl overflow-hidden shadow-lg z-20">
+                {localStream ? (
+                  <video
+                    ref={localVideoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="w-full h-full object-cover transform -scale-x-100"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-[9px] text-slate-400 font-mono">
+                    <span>Camera Off</span>
+                  </div>
+                )}
+                <div className="absolute bottom-0.5 left-0.5 px-1 py-0.2 bg-black/70 rounded text-[8px] font-mono text-white">
+                  You (Dr)
+                </div>
               </div>
             </div>
 
             {/* Vitals Strip */}
-            <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex items-center justify-between text-[11px] font-mono text-slate-300">
+            <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-2.5 flex items-center justify-between text-[11px] font-mono text-slate-300 mb-3">
               <div>
                 BP: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.systolicBP ? `${currentPatient.vitalsLatest.systolicBP}/${currentPatient.vitalsLatest.diastolicBP}` : "134/86"}</strong>
               </div>
@@ -637,19 +866,21 @@ export function ConsultationPage() {
             <div className="flex items-center justify-between pt-3 border-t border-slate-800">
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setIsAudioMuted(!isAudioMuted)}
+                  type="button"
+                  onClick={toggleAudio}
                   className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
-                    isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                    isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
-                  title={isAudioMuted ? "Unmute Mic" : "Mute Mic"}
+                  title={isAudioMuted ? "Unmute Doctor Mic" : "Mute Doctor Mic"}
                 >
                   {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
 
                 <button
-                  onClick={() => setIsVideoMuted(!isVideoMuted)}
+                  type="button"
+                  onClick={toggleVideo}
                   className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
-                    isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                    isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                   title={isVideoMuted ? "Start Camera" : "Stop Camera"}
                 >
@@ -657,19 +888,34 @@ export function ConsultationPage() {
                 </button>
               </div>
 
-              {/* End Call */}
-              <button
-                className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-2 cursor-pointer border-none transition-all shadow-xs bg-rose-600 hover:bg-rose-500 text-white"
-              >
-                <PhoneOff className="w-3.5 h-3.5" />
-                <span>End Call</span>
-              </button>
+              {/* End Call / Rejoin */}
+              {isCallActive ? (
+                <button
+                  type="button"
+                  onClick={endCall}
+                  className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-1.5 cursor-pointer border-none transition-all shadow-xs bg-rose-600 hover:bg-rose-500 text-white"
+                >
+                  <PhoneOff className="w-3.5 h-3.5" />
+                  <span>End Call</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={startCall}
+                  className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-1.5 cursor-pointer border-none transition-all shadow-xs bg-teal-700 hover:bg-teal-600 text-white"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Start Call</span>
+                </button>
+              )}
 
               {/* Toggle Transcript Panel */}
               <button
+                type="button"
                 onClick={() => setShowTranscriptPanel(!showTranscriptPanel)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${showTranscriptPanel ? "bg-teal-600 text-white" : "bg-slate-800 text-slate-300"
-                  }`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
+                  showTranscriptPanel ? "bg-teal-600 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                }`}
                 title="Toggle Transcription Panel"
               >
                 <ScrollText className="w-4 h-4" />
@@ -756,17 +1002,22 @@ export function ConsultationPage() {
                 {prescription.map((med, idx) => (
                   <div key={idx} className="p-3 bg-[#FAF7F2] rounded-2xl border border-[#D3D4C0] flex flex-col gap-2">
                     <div className="flex items-center justify-between gap-2">
-                      <input
-                        type="text"
-                        placeholder="Medicine name (e.g. Tab. Ferrous Ascorbate 100mg)"
+                      <MedicineAutocompleteInput
                         value={med.medicine}
-                        onChange={(e) => handleUpdateMedicine(idx, "medicine", e.target.value)}
-                        className="flex-1 px-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-700"
+                        onChange={(val) => handleUpdateMedicine(idx, "medicine", val)}
+                        onSelectDrug={(drug) => {
+                          handleUpdateMedicine(idx, "medicine", drug.name);
+                          if (drug.dosage) handleUpdateMedicine(idx, "dosage", drug.dosage);
+                          if (drug.frequency) handleUpdateMedicine(idx, "frequency", drug.frequency);
+                          if (drug.duration) handleUpdateMedicine(idx, "duration", drug.duration);
+                          if (drug.instructions) handleUpdateMedicine(idx, "instructions", drug.instructions);
+                        }}
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveMedicine(idx)}
-                        className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer bg-transparent border-none"
+                        className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer bg-transparent border-none transition-colors"
+                        title="Remove medicine"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

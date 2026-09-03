@@ -9,6 +9,7 @@ import { LoginPage } from "./pages/LoginPage.jsx";
 import { AboutPage } from "./pages/AboutPage.jsx";
 import { PrivacyPage } from "./pages/PrivacyPage.jsx";
 import { TermsPage } from "./pages/TermsPage.jsx";
+import { JoinCallPage } from "./pages/JoinCallPage.jsx";
 
 // Protected Console Pages
 import { PatientListPage } from "./pages/PatientListPage.jsx";
@@ -36,6 +37,7 @@ export function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/call/:roomId" element={<JoinCallPage />} />
 
           {/* Protected Console Workspace */}
           <Route element={<AppLayout />}>

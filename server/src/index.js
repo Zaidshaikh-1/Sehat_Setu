@@ -7,6 +7,7 @@ import app from "./app.js";
 import { connectDb } from "./db/db.connection.js";
 import { initReferralSocket } from "./socket/referral.socket.js";
 import { initAmbulanceSocket } from "./socket/ambulance.socket.js";
+import { initCallSocket } from "./socket/call.socket.js";
 import { setIo } from "./socket/io.store.js";
 
 const PORT = process.env.PORT || 5050;
@@ -28,6 +29,7 @@ connectDb()
 
     initReferralSocket(io);
     initAmbulanceSocket(io);
+    initCallSocket(io);
 
     server.listen(PORT, () => {
       console.log(`=========================================`);

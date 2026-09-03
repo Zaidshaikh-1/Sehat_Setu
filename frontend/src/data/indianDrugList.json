@@ -1,0 +1,524 @@
+[
+  {
+    "name": "Tab. Paracetamol 500mg",
+    "genericName": "Paracetamol",
+    "category": "Analgesics / Antipyretics",
+    "dosage": "1 tablet",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "3 days",
+    "instructions": "After meals when fever > 100°F"
+  },
+  {
+    "name": "Tab. Paracetamol 650mg",
+    "genericName": "Paracetamol",
+    "category": "Analgesics / Antipyretics",
+    "dosage": "1 tablet",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "3 days",
+    "instructions": "After meals for severe body ache/fever"
+  },
+  {
+    "name": "Syp. Paracetamol 120mg/5ml",
+    "genericName": "Paracetamol",
+    "category": "Pediatric / ORS",
+    "dosage": "5 ml",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "3 days",
+    "instructions": "Give with measuring cap after feeding"
+  },
+  {
+    "name": "Tab. Ibuprofen 400mg",
+    "genericName": "Ibuprofen",
+    "category": "Analgesics / Antipyretics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "3 days",
+    "instructions": "Strictly after food with plenty of water"
+  },
+  {
+    "name": "Tab. Diclofenac Sodium 50mg",
+    "genericName": "Diclofenac",
+    "category": "Analgesics / Antipyretics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Take along with antacid after meals"
+  },
+  {
+    "name": "Tab. Tramadol 50mg",
+    "genericName": "Tramadol",
+    "category": "Analgesics / Antipyretics",
+    "dosage": "1 tablet",
+    "frequency": "SOS / As needed",
+    "duration": "3 days",
+    "instructions": "For severe post-operative or trauma pain"
+  },
+  {
+    "name": "Tab. Amoxicillin 500mg",
+    "genericName": "Amoxicillin",
+    "category": "Antibiotics",
+    "dosage": "1 capsule",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "5 days",
+    "instructions": "Complete full 5-day course"
+  },
+  {
+    "name": "Tab. Amoxicillin + Clavulanic Acid 625mg (Augmentin)",
+    "genericName": "Amoxicillin + Potassium Clavulanate",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Take at the start of a meal to reduce GI discomfort"
+  },
+  {
+    "name": "Syp. Amoxicillin + Clavulanate 228.5mg/5ml",
+    "genericName": "Amoxicillin + Potassium Clavulanate",
+    "category": "Pediatric / ORS",
+    "dosage": "5 ml",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Reconstitute with sterile water, store in cool place"
+  },
+  {
+    "name": "Tab. Azithromycin 500mg",
+    "genericName": "Azithromycin",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "3 days",
+    "instructions": "1 hour before meals or 2 hours after meals"
+  },
+  {
+    "name": "Tab. Azithromycin 250mg",
+    "genericName": "Azithromycin",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "5 days",
+    "instructions": "Take at fixed time daily"
+  },
+  {
+    "name": "Tab. Ciprofloxacin 500mg",
+    "genericName": "Ciprofloxacin",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Drink plenty of fluids. Avoid taking with antacids or milk"
+  },
+  {
+    "name": "Tab. Ofloxacin 200mg + Ornidazole 500mg",
+    "genericName": "Ofloxacin + Ornidazole",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "For acute gastroenteritis/diarrhea after meals"
+  },
+  {
+    "name": "Tab. Cefixime 200mg",
+    "genericName": "Cefixime",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Take after meals"
+  },
+  {
+    "name": "Tab. Ceftriaxone 1g Injection",
+    "genericName": "Ceftriaxone",
+    "category": "Emergency / Life-Saving",
+    "dosage": "1 vial (1g)",
+    "frequency": "Once daily IV/IM",
+    "duration": "3 days",
+    "instructions": "Hospital setting administration after test dose"
+  },
+  {
+    "name": "Tab. Metronidazole 400mg",
+    "genericName": "Metronidazole",
+    "category": "Antibiotics",
+    "dosage": "1 tablet",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "5 days",
+    "instructions": "Avoid alcohol completely during course"
+  },
+  {
+    "name": "Tab. Doxycycline 100mg",
+    "genericName": "Doxycycline",
+    "category": "Antibiotics",
+    "dosage": "1 capsule",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "7 days",
+    "instructions": "Take with full glass of water, do not lie down for 30 min"
+  },
+  {
+    "name": "Tab. Cotrimoxazole (Trimethoprim 80mg + Sulfamethoxazole 400mg)",
+    "genericName": "Cotrimoxazole",
+    "category": "Antibiotics",
+    "dosage": "2 tablets",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "5 days",
+    "instructions": "Drink 2-3 liters of water daily"
+  },
+  {
+    "name": "Tab. Amlodipine 5mg",
+    "genericName": "Amlodipine",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Morning after breakfast, monitor BP weekly"
+  },
+  {
+    "name": "Tab. Amlodipine 10mg",
+    "genericName": "Amlodipine",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Morning fixed time"
+  },
+  {
+    "name": "Tab. Telmisartan 40mg",
+    "genericName": "Telmisartan",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take at the same time each morning"
+  },
+  {
+    "name": "Tab. Telmisartan 40mg + Hydrochlorothiazide 12.5mg",
+    "genericName": "Telmisartan + HCTZ",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take in morning to prevent nighttime urination"
+  },
+  {
+    "name": "Tab. Enalapril 5mg",
+    "genericName": "Enalapril",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Monitor serum potassium and renal function"
+  },
+  {
+    "name": "Tab. Atenolol 50mg",
+    "genericName": "Atenolol",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Do not stop abruptly"
+  },
+  {
+    "name": "Tab. Labetalol 100mg",
+    "genericName": "Labetalol",
+    "category": "Maternal / Iron-Folic",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "15 days",
+    "instructions": "Safe for gestational hypertension, monitor maternal BP & fetal HR"
+  },
+  {
+    "name": "Tab. Metformin 500mg (Sustained Release)",
+    "genericName": "Metformin",
+    "category": "Antidiabetic",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "30 days",
+    "instructions": "Take with or immediately after meals"
+  },
+  {
+    "name": "Tab. Metformin 1000mg (SR)",
+    "genericName": "Metformin",
+    "category": "Antidiabetic",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "30 days",
+    "instructions": "Take with breakfast and dinner"
+  },
+  {
+    "name": "Tab. Glimepiride 1mg",
+    "genericName": "Glimepiride",
+    "category": "Antidiabetic",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take 15 minutes before the first main meal"
+  },
+  {
+    "name": "Tab. Glimepiride 2mg + Metformin 500mg SR",
+    "genericName": "Glimepiride + Metformin",
+    "category": "Antidiabetic",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "30 days",
+    "instructions": "Before breakfast and before dinner"
+  },
+  {
+    "name": "Inj. Human Insulin 30/70 (Premix 100IU/ml)",
+    "genericName": "Biphasic Isophane Insulin",
+    "category": "Antidiabetic",
+    "dosage": "As titrated (e.g., 14U - 0 - 10U)",
+    "frequency": "Twice daily SC",
+    "duration": "30 days",
+    "instructions": "Inject subcutaneously 30 min before meals. Keep refrigerated"
+  },
+  {
+    "name": "Tab. Ferrous Ascorbate 100mg + Folic Acid 1.5mg",
+    "genericName": "Ferrous Ascorbate + Folic Acid",
+    "category": "Maternal / Iron-Folic",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take after food with lemon water/vitamin C. Avoid milk/tea around intake"
+  },
+  {
+    "name": "Tab. Folic Acid 5mg",
+    "genericName": "Folic Acid",
+    "category": "Maternal / Iron-Folic",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "90 days",
+    "instructions": "Pre-conceptional and 1st trimester neural tube defect prevention"
+  },
+  {
+    "name": "Tab. Calcium Carbonate 500mg with Vit D3 250 IU",
+    "genericName": "Calcium Carbonate + Cholecalciferol",
+    "category": "Maternal / Iron-Folic",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (0-1-0)",
+    "duration": "30 days",
+    "instructions": "After lunch with a glass of water. Keep 2 hours gap from Iron tablet"
+  },
+  {
+    "name": "Tab. Albendazole 400mg",
+    "genericName": "Albendazole",
+    "category": "Maternal / Iron-Folic",
+    "dosage": "1 tablet",
+    "frequency": "Single dose stat (1-0-0)",
+    "duration": "1 day",
+    "instructions": "Chew tablet thoroughly at bedtime for deworming (2nd/3rd trimester)"
+  },
+  {
+    "name": "ORS Powder (WHO Formulation 21.8g Sachet)",
+    "genericName": "Oral Rehydration Salts",
+    "category": "Pediatric / ORS",
+    "dosage": "1 sachet in 1 Litre boiled water",
+    "frequency": "Sip continuously after every loose stool",
+    "duration": "3 days",
+    "instructions": "Use fresh solution within 24 hours. Do not boil prepared solution"
+  },
+  {
+    "name": "Tab. Zinc Sulfate 20mg (Dispersible)",
+    "genericName": "Zinc Sulfate",
+    "category": "Pediatric / ORS",
+    "dosage": "1 dispersible tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "14 days",
+    "instructions": "Dissolve in 5ml breast milk or clean water. Complete 14 days course for diarrhea"
+  },
+  {
+    "name": "Tab. Pantoprazole 40mg",
+    "genericName": "Pantoprazole",
+    "category": "GI / Antacids",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "14 days",
+    "instructions": "Take empty stomach 30 minutes before breakfast"
+  },
+  {
+    "name": "Tab. Omeprazole 20mg",
+    "genericName": "Omeprazole",
+    "category": "GI / Antacids",
+    "dosage": "1 capsule",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "14 days",
+    "instructions": "Empty stomach morning with water"
+  },
+  {
+    "name": "Tab. Ondansetron 4mg (MD / Fast Dissolving)",
+    "genericName": "Ondansetron",
+    "category": "GI / Antacids",
+    "dosage": "1 mouth dissolving tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "3 days",
+    "instructions": "Place on tongue before meals for nausea and vomiting"
+  },
+  {
+    "name": "Tab. Ranitidine 150mg",
+    "genericName": "Ranitidine",
+    "category": "GI / Antacids",
+    "dosage": "1 tablet",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "7 days",
+    "instructions": "Take before meals"
+  },
+  {
+    "name": "Syp. Antacid Gel (Aluminium + Magnesium Hydroxide + Simethicone 200ml)",
+    "genericName": "Antacid Suspension",
+    "category": "GI / Antacids",
+    "dosage": "10 ml",
+    "frequency": "Thrice daily (1-1-1)",
+    "duration": "5 days",
+    "instructions": "Shake well, take 1 hour after meals and bedtime"
+  },
+  {
+    "name": "Tab. Cetirizine 10mg",
+    "genericName": "Cetirizine",
+    "category": "Antiallergic",
+    "dosage": "1 tablet",
+    "frequency": "Once daily at night (0-0-1)",
+    "duration": "5 days",
+    "instructions": "Take at bedtime, may cause mild drowsiness"
+  },
+  {
+    "name": "Tab. Levocetirizine 5mg + Montelukast 10mg",
+    "genericName": "Levocetirizine + Montelukast",
+    "category": "Respiratory",
+    "dosage": "1 tablet",
+    "frequency": "Once daily at night (0-0-1)",
+    "duration": "10 days",
+    "instructions": "Take at night for allergic rhinitis / asthma symptom relief"
+  },
+  {
+    "name": "Salbutamol Inhaler 100mcg (Asthalin MDI)",
+    "genericName": "Salbutamol",
+    "category": "Respiratory",
+    "dosage": "2 puffs SOS",
+    "frequency": "As needed (up to 4 times daily)",
+    "duration": "30 days",
+    "instructions": "Use with spacer for acute wheezing or breathlessness"
+  },
+  {
+    "name": "Budesonide 0.5mg Respules (Nebulization)",
+    "genericName": "Budesonide",
+    "category": "Respiratory",
+    "dosage": "1 respule (2ml)",
+    "frequency": "Twice daily via nebulizer",
+    "duration": "5 days",
+    "instructions": "Nebulize with clean machine. Rinse mouth after use"
+  },
+  {
+    "name": "Tab. Vitamin B-Complex with Vitamin C (Becosules)",
+    "genericName": "B-Complex + Vitamin C",
+    "category": "Vitamins / Supplements",
+    "dosage": "1 capsule",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take after breakfast for oral ulcers or nutritional recovery"
+  },
+  {
+    "name": "Tab. Vitamin D3 60000 IU (Cholecalciferol)",
+    "genericName": "Cholecalciferol",
+    "category": "Vitamins / Supplements",
+    "dosage": "1 capsule / sachet",
+    "frequency": "Once weekly",
+    "duration": "8 weeks",
+    "instructions": "Take with whole milk on Sunday morning"
+  },
+  {
+    "name": "Tab. Multivitamin & Multimineral Daily",
+    "genericName": "Multivitamins with Zinc",
+    "category": "Vitamins / Supplements",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "After meals"
+  },
+  {
+    "name": "Inj. Tetanus Toxoid 0.5ml IM (TT / Td Vaccine)",
+    "genericName": "Tetanus and Diphtheria Toxoid",
+    "category": "Emergency / Life-Saving",
+    "dosage": "0.5 ml IM",
+    "frequency": "Stat single dose",
+    "duration": "1 day",
+    "instructions": "Intramuscular injection in deltoid muscle"
+  },
+  {
+    "name": "Inj. Adrenaline 1:1000 (1mg/ml)",
+    "genericName": "Epinephrine / Adrenaline",
+    "category": "Emergency / Life-Saving",
+    "dosage": "0.5 mg (0.5ml) IM",
+    "frequency": "Immediate stat in emergency",
+    "duration": "1 dose",
+    "instructions": "Anterolateral thigh IM for anaphylaxis / severe shock"
+  },
+  {
+    "name": "Inj. Hydrocortisone 100mg Vial",
+    "genericName": "Hydrocortisone Sodium Succinate",
+    "category": "Emergency / Life-Saving",
+    "dosage": "100 mg IV stat",
+    "frequency": "As directed",
+    "duration": "1 day",
+    "instructions": "Emergency IV injection for severe allergic reaction or status asthmaticus"
+  },
+  {
+    "name": "Tab. Atorvastatin 20mg",
+    "genericName": "Atorvastatin",
+    "category": "Antihypertensives",
+    "dosage": "1 tablet",
+    "frequency": "Once daily at bedtime (0-0-1)",
+    "duration": "30 days",
+    "instructions": "Take at night for lipid lowering"
+  },
+  {
+    "name": "Tab. Aspirin 75mg (Enteric Coated)",
+    "genericName": "Acetylsalicylic Acid",
+    "category": "Emergency / Life-Saving",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Take after meals for cardio-protection"
+  },
+  {
+    "name": "Tab. Clopidogrel 75mg",
+    "genericName": "Clopidogrel",
+    "category": "Emergency / Life-Saving",
+    "dosage": "1 tablet",
+    "frequency": "Once daily (1-0-0)",
+    "duration": "30 days",
+    "instructions": "Antiplatelet therapy after meals"
+  },
+  {
+    "name": "Framycetin Skin Cream 1% (Soframycin 30g)",
+    "genericName": "Framycetin Sulfate",
+    "category": "Dermatological",
+    "dosage": "Thin layer",
+    "frequency": "Twice daily local application",
+    "duration": "7 days",
+    "instructions": "Clean wound with normal saline and apply gently"
+  },
+  {
+    "name": "Povidone Iodine Ointment 5% (Betadine 20g)",
+    "genericName": "Povidone Iodine",
+    "category": "Dermatological",
+    "dosage": "Apply locally",
+    "frequency": "Twice daily with sterile dressing",
+    "duration": "5 days",
+    "instructions": "For minor cuts, burns, abrasions"
+  },
+  {
+    "name": "Clotrimazole Cream 1% (Candid 20g)",
+    "genericName": "Clotrimazole",
+    "category": "Dermatological",
+    "dosage": "Thin layer",
+    "frequency": "Twice daily (1-0-1)",
+    "duration": "14 days",
+    "instructions": "Apply to fungal infection site after cleaning and drying thoroughly"
+  },
+  {
+    "name": "Ciprofloxacin 0.3% Eye/Ear Drops 10ml",
+    "genericName": "Ciprofloxacin Ophthalmic",
+    "category": "Antibiotics",
+    "dosage": "2 drops",
+    "frequency": "4 times daily",
+    "duration": "5 days",
+    "instructions": "Instill into affected eye/ear. Do not touch dropper tip"
+  }
+]

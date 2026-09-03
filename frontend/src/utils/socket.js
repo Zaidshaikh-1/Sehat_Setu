@@ -2,20 +2,23 @@ import { io } from "socket.io-client";
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5050";
 
-let socketInstance = null;
+export const socket = io(SOCKET_URL, {
+  autoConnect: true,
+  withCredentials: true,
+  transports: ["websocket", "polling"],
+});
 
 export const getSocket = () => {
-  if (!socketInstance) {
-    const token = localStorage.getItem("setu_token");
-    socketInstance = io(SOCKET_URL, {
-      auth: { token },
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    });
-
-    socketInstance.on("connect", () => {
-      console.log("Connected to Setu real-time network:", socketInstance.id);
-    });
+  if (!socket.connected) {
+    socket.connect();
   }
-  return socketInstance;
+  return socket;
 };
+
+export const disconnectSocket = () => {
+  if (socket.connected) {
+    socket.disconnect();
+  }
+};
+
+export default socket;
