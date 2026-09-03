@@ -22,6 +22,8 @@ import { MedicinePage } from "./pages/MedicinePage.jsx";
 import { FollowUpPage } from "./pages/FollowUpPage.jsx";
 import { EmergencyPage } from "./pages/EmergencyPage.jsx";
 import { DashboardPage } from "./pages/DashboardPage.jsx";
+import { BloodBankPage } from "./pages/BloodBankPage.jsx";
+import { AmbulanceTrackingPage } from "./pages/AmbulanceTrackingPage.jsx";
 
 export function App() {
   return (
@@ -49,6 +51,9 @@ export function App() {
             <Route path="/medicine" element={<MedicinePage />} />
             <Route path="/followup" element={<FollowUpPage />} />
             <Route path="/emergency" element={<EmergencyPage />} />
+            <Route path="/blood-bank" element={<BloodBankPage />} />
+            <Route path="/ambulance-tracking" element={<AmbulanceTrackingPage />} />
+            <Route path="/ambulance-tracking/:sosCode" element={<AmbulanceTrackingPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
 

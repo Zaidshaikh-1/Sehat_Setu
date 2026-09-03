@@ -1,11 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { createServer } from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
 import { connectDb } from "./db/db.connection.js";
 import { initReferralSocket } from "./socket/referral.socket.js";
+import { initAmbulanceSocket } from "./socket/ambulance.socket.js";
 import { setIo } from "./socket/io.store.js";
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 connectDb()
   .then(() => {
@@ -23,6 +27,7 @@ connectDb()
     setIo(io);
 
     initReferralSocket(io);
+    initAmbulanceSocket(io);
 
     server.listen(PORT, () => {
       console.log(`=========================================`);

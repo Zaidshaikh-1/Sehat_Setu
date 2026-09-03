@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import { api } from "../utils/api.js";
+import { AmbulanceMapPreview } from "../components/AmbulanceMapPreview.jsx";
 import {
   ShieldAlert,
   AlertTriangle,
@@ -9,10 +10,15 @@ import {
   Phone,
   Radio,
   Clock,
+  Droplet,
+  Users,
+  ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 
 export function EmergencyPage() {
   const { patients, activePatient } = useOutletContext();
+  const navigate = useNavigate();
   const [patientId, setPatientId] = useState(activePatient?._id || "");
   const [emergencyType, setEmergencyType] = useState("Obstetric Emergency (Hemorrhage / Pre-Eclampsia)");
   const [landmark, setLandmark] = useState("Near Rampur Gram Panchayat Water Tank");
@@ -61,13 +67,13 @@ export function EmergencyPage() {
       <div className="bg-[#1f2229] text-white p-7 rounded-3xl border border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-rose-400">
-            Module 3.10 · Fast-Track Dispatch
+            Module 3.10 · Fast-Track Dispatch & Telemetry
           </span>
           <h2 className="text-3xl font-serif font-bold text-white tracking-tight mt-1">
             108 Emergency Ambulance Escalation
           </h2>
           <p className="text-xs text-slate-300 mt-1 max-w-2xl font-sans">
-            Bypasses all standard clinical queues. Dispatches nearest 108 ambulance and activates trauma bay at District Hospital.
+            Bypasses all standard clinical queues. Dispatches nearest 108 ambulance with GPS live tracking and automatic blood bank matching.
           </p>
         </div>
 
@@ -105,7 +111,7 @@ export function EmergencyPage() {
                 <option value="">-- Anonymous / Roadside Incident --</option>
                 {patients?.map((p) => (
                   <option key={p._id} value={p._id}>
-                    {p.name} ({p.village} · ABHA: {p.abhaId})
+                    {p.name} ({p.bloodGroup || "O+"} · {p.village} · ABHA: {p.abhaId})
                   </option>
                 ))}
               </select>
@@ -151,18 +157,71 @@ export function EmergencyPage() {
             </div>
           </form>
 
+          {/* SOS Dispatch Confirmation */}
           {sosResult && (
-            <div className="p-5 bg-[#1f2229] text-white border border-slate-800 rounded-2xl flex flex-col gap-2 keep-note animate-fadeIn">
-              <div className="flex items-center gap-2 text-rose-300 font-bold text-xs">
-                <CheckCircle2 className="w-4 h-4 text-rose-400" />
-                <span>108 FLEET DISPATCHED · SOS CODE: {sosResult.sosCode}</span>
+            <div className="flex flex-col gap-4 animate-fadeIn">
+              <div className="p-5 bg-[#1f2229] text-white border border-slate-800 rounded-2xl flex flex-col gap-3 keep-note">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-rose-300 font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-rose-400" />
+                    <span>108 FLEET DISPATCHED · SOS CODE: {sosResult.sosCode}</span>
+                  </div>
+
+                  <button
+                    onClick={() => navigate(`/ambulance-tracking/${sosResult.sosCode}`)}
+                    className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-mono font-bold rounded-lg flex items-center gap-1 cursor-pointer border-none"
+                  >
+                    <span>Full Radar</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
+
+                <div className="text-xs text-slate-300 font-mono">
+                  Destination: <strong>{sosResult.destinationFacility?.name}</strong> · ETA: ~{sosResult.etaMinutes} mins
+                </div>
               </div>
-              <div className="text-xs text-slate-300 font-mono">
-                Destination: <strong>{sosResult.destinationFacility?.name}</strong> · ETA: ~{sosResult.etaMinutes} mins
-              </div>
-              <div className="text-[11px] text-slate-400">
-                Hospital emergency reception notified. All standard queues bypassed.
-              </div>
+
+              {/* Automatic Blood Bank Match Card */}
+              {sosResult.bloodMatch && (
+                <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex flex-col gap-3 text-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Droplet className="w-4 h-4 text-rose-600" />
+                      <span className="font-bold text-rose-900 font-serif text-sm">
+                        Blood Match Alert: {sosResult.bloodMatch.patientBlood}
+                      </span>
+                    </div>
+
+                    <span className="px-2 py-0.5 bg-rose-600 text-white rounded text-[10px] font-mono font-bold">
+                      {sosResult.bloodMatch.hospitalStockUnits} Hospital Units Ready
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] text-rose-800 font-sans leading-relaxed">
+                    Hospital cold storage verified. Compatible donor types:{" "}
+                    <strong>{sosResult.bloodMatch.compatibleTypes?.join(", ")}</strong>.
+                    {sosResult.bloodMatch.matchedDonors?.length > 0 && (
+                      <span> {sosResult.bloodMatch.matchedDonors.length} emergency community donors alerted in village grid.</span>
+                    )}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-rose-200 text-[11px]">
+                    <span className="text-rose-700 font-mono">
+                      {sosResult.bloodMatch.hospitalName} Blood Bank
+                    </span>
+                    <button
+                      onClick={() => navigate("/blood-bank")}
+                      className="text-rose-900 font-bold hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+                    >
+                      <span>Open Blood Bank Grid</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Live Map Preview */}
+              <AmbulanceMapPreview telemetry={sosResult.telemetry} sosCode={sosResult.sosCode} />
             </div>
           )}
         </div>
@@ -201,7 +260,12 @@ export function EmergencyPage() {
 
                     <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-2 border-t border-[#D3D4C0]/50">
                       <span>Destination: {em.toFacility?.name?.split(" ")[0] || "Hospital"}</span>
-                      <span>108 Ambulance</span>
+                      <button
+                        onClick={() => navigate(`/ambulance-tracking/${em.referralCode}`)}
+                        className="text-rose-700 hover:text-rose-900 font-bold flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+                      >
+                        <span>Live Radar →</span>
+                      </button>
                     </div>
                   </div>
                 ))
@@ -213,3 +277,4 @@ export function EmergencyPage() {
     </div>
   );
 }
+
