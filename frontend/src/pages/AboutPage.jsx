@@ -1,85 +1,88 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Navbar } from "../components/landing/Navbar.jsx";
 import { FooterSection } from "../components/landing/FooterSection.jsx";
+import { ShieldCheck, HeartPulse, Building, Users, Activity, CheckCircle2 } from "lucide-react";
 
 export function AboutPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-[#fafafc] flex flex-col font-sans select-none overflow-x-clip text-slate-800 antialiased">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 text-left">
       <Navbar />
 
-      <main className="flex-1 w-full max-w-4xl mx-auto px-6 py-14 md:py-20 text-left">
-        <div className="mb-14 border-b border-slate-200/80 pb-8 text-left">
-          <span className="text-xs font-mono font-bold uppercase tracking-widest text-teal-700 block mb-3">
-            ABOUT SETU · SIH 2026
+      <main className="flex-1 max-w-4xl mx-auto px-6 py-12 flex flex-col gap-10">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700">
+            System Architecture & Vision
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[#22252a] font-bold tracking-tight leading-none">
-            Integrated Rural Care-Access & Quality Platform
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            About Setu (सेतु) Healthcare
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base mt-4 font-mono">
-            Smart India Hackathon Problem Statement Ref: SIH21633
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+            Smart India Hackathon 2026 Reference Solution · Problem Statement SIH21633
           </p>
         </div>
 
-        <div className="text-base sm:text-lg text-slate-700 leading-relaxed mb-12 max-w-3xl">
-          Rural patients in India frequently bounce between sub-centres, PHCs, CHCs, and district hospitals with zero shared memory of what transpired at the previous touchpoint. Referrals leak, diagnostic machines sit broken without oversight, and frontline workers are overburdened with paper registers.
-        </div>
+        {/* Section 1: Problem Statement */}
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col gap-4">
+          <h2 className="text-xl font-bold text-slate-900">
+            The Public Health Reality
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Rural Indian patients frequently navigate between sub-centres, Primary Health Centres (PHCs), Community Health Centres (CHCs), and District Hospitals with no shared memory of what happened at their last visit. Diagnostic availability is fragmented, and verbal referrals often leak when patients fail to reach tertiary hospitals without active tracking.
+          </p>
+          <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800">
+            Setu does not attempt to replace the public health system. It strengthens existing health workers (ASHA, ANM, Medical Officers) through interoperable digital rails built directly on Ayushman Bharat Digital Mission (ABDM) standards.
+          </div>
+        </section>
 
-        <div className="flex flex-col gap-12 max-w-3xl">
-          {/* Section 01 */}
-          <section className="flex flex-col gap-3">
-            <span className="text-xs font-mono font-bold text-teal-700 uppercase tracking-widest">01 / OUR PHILOSOPHY</span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#22252a]">
-              Strengthen the Public Health System, Don't Replace It
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              Setu does not invent a parallel private app that competes with government infrastructure. Instead, it plugs directly into existing <strong>ABHA / ABDM rails</strong>, existing frontline staff roles (ASHA, ANM, Medical Officer), and the existing tier hierarchy to close systemic leaks.
-            </p>
-          </section>
+        {/* Section 2: Key Pillars */}
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col gap-6">
+          <h2 className="text-xl font-bold text-slate-900">
+            Core Architectural Pillars
+          </h2>
 
-          {/* Section 02 */}
-          <section className="flex flex-col gap-4">
-            <span className="text-xs font-mono font-bold text-teal-700 uppercase tracking-widest">02 / CORE ARCHITECTURAL PILLARS</span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#22252a]">
-              The 4 Unbroken Links
-            </h2>
-            <div className="flex flex-col gap-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-              <div className="border-l-2 border-teal-700 pl-4 py-1">
-                <strong className="text-[#22252a] block">Longitudinal Health Record:</strong>
-                One lifetime record follows the patient everywhere, regardless of facility or district.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-teal-700" />
+                <h3 className="text-sm font-bold text-slate-900">Offline-Ready Triage</h3>
               </div>
-              <div className="border-l-2 border-teal-700 pl-4 py-1">
-                <strong className="text-[#22252a] block">Closed-Loop Referral Tracking:</strong>
-                Every referral is a trackable state machine (Issued ➔ Traveling ➔ Arrived ➔ Seen) that alerts referring ASHAs when care is completed.
-              </div>
-              <div className="border-l-2 border-teal-700 pl-4 py-1">
-                <strong className="text-[#22252a] block">Offline-First Digital Triage:</strong>
-                Rule-based decision tree that operates smoothly on low-end ₹5,000 Android phones without internet.
-              </div>
-              <div className="border-l-2 border-teal-700 pl-4 py-1">
-                <strong className="text-[#22252a] block">District Accountability Layer:</strong>
-                Surfaces referral drop-offs, broken diagnostic machines, and pharmacy stock-outs directly to District Health Officers.
-              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Deterministic decision trees evaluate maternal, pediatric, and cardiac danger signs directly on frontline devices without requiring continuous cloud connectivity.
+              </p>
             </div>
-          </section>
 
-          {/* Section 03 */}
-          <section className="flex flex-col gap-3 border-t border-slate-200/80 pt-8">
-            <span className="text-xs font-mono font-bold text-teal-700 uppercase tracking-widest">03 / COLLABORATION</span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#22252a]">
-              Connect With the Development Team
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              Built for Smart India Hackathon 2026. For technical queries, ABDM sandbox integrations, or deployment evaluations:
-            </p>
-            <p className="text-lg sm:text-xl font-bold text-[#22252a]">
-              Email: <span className="text-teal-700 underline">contact@setu.gov.in</span>
-            </p>
-          </section>
-        </div>
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-blue-700" />
+                <h3 className="text-sm font-bold text-slate-900">Longitudinal Care Memory</h3>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Every encounter, digital triage check, e-prescription, and lab result is stored against the patient's ABHA ID in standardized HL7 FHIR R4 JSON format.
+              </p>
+            </div>
+
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Building className="w-4 h-4 text-purple-700" />
+                <h3 className="text-sm font-bold text-slate-900">Closed-Loop Referrals</h3>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Verbal referrals are replaced with state machine tickets tracked across Issued, Traveling, Arrived, and Seen states to eliminate referral leakage.
+              </p>
+            </div>
+
+            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                <h3 className="text-sm font-bold text-slate-900">District Accountability</h3>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Real-time dashboard for District Health Officers showing referral completion percentages, broken diagnostic machinery, and pharmacy stock-out alerts.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <FooterSection />

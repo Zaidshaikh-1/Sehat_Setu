@@ -124,15 +124,15 @@ export function ConsultationPage() {
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto text-left font-sans text-slate-800">
       {/* Top Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
             Module 3.3 · Clinical Telemedicine
           </span>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             Assisted Clinical Teleconsultation
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
             Medical Officer teleconsultation with frontline worker relaying live vitals.
           </p>
         </div>
@@ -147,7 +147,7 @@ export function ConsultationPage() {
               const p = patients?.find((item) => item._id === e.target.value);
               if (p) setActivePatient(p);
             }}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-600"
+            className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-700"
           >
             {patients?.map((p) => (
               <option key={p._id} value={p._id}>
@@ -162,22 +162,22 @@ export function ConsultationPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Video Feed Placeholder (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xs flex flex-col justify-between min-h-[340px] text-white">
+          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[360px] text-white">
             <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-lg text-[10px] font-mono font-bold">
+              <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold">
                 WebRTC Stream Active
               </span>
 
-              <div className="flex bg-slate-800 rounded-lg p-0.5 text-[10px] font-mono">
+              <div className="flex bg-slate-800 rounded-xl p-0.5 text-[10px] font-mono">
                 <button
                   onClick={() => setMode("video")}
-                  className={`px-2 py-0.5 rounded cursor-pointer border-none ${mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
+                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
                 >
                   Video
                 </button>
                 <button
                   onClick={() => setMode("voice")}
-                  className={`px-2 py-0.5 rounded cursor-pointer border-none ${mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
+                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
                 >
                   Voice
                 </button>
@@ -185,11 +185,11 @@ export function ConsultationPage() {
             </div>
 
             <div className="my-auto flex flex-col items-center justify-center gap-3 py-6">
-              <div className="w-16 h-16 rounded-full bg-slate-800 border border-teal-500/40 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-teal-500/40 flex items-center justify-center">
                 <Stethoscope className="w-8 h-8 text-teal-400" />
               </div>
               <div className="text-center">
-                <h4 className="text-sm font-bold text-white">{currentPatient?.name || "Patient"}</h4>
+                <h4 className="text-base font-serif font-bold text-white">{currentPatient?.name || "Patient"}</h4>
                 <p className="text-xs text-slate-400 font-mono">
                   Assisted by ASHA Meera · Rampur Sub-Centre
                 </p>
@@ -197,7 +197,7 @@ export function ConsultationPage() {
             </div>
 
             {/* Vitals Strip */}
-            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3 flex items-center justify-between text-[11px] font-mono text-slate-300">
+            <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex items-center justify-between text-[11px] font-mono text-slate-300">
               <div>BP: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.systolicBP ? `${currentPatient.vitalsLatest.systolicBP}/${currentPatient.vitalsLatest.diastolicBP}` : "134/86"}</strong></div>
               <div>SpO2: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.spO2 || 98}%</strong></div>
               <div>Hb: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.hemoglobin || 8.8} g/dL</strong></div>
@@ -207,31 +207,31 @@ export function ConsultationPage() {
             <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-800">
               <button
                 onClick={() => setIsAudioMuted(!isAudioMuted)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer border-none transition-all ${
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
                   isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
                 }`}
               >
-                {isAudioMuted ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
 
               <button
                 onClick={() => setIsVideoMuted(!isVideoMuted)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer border-none transition-all ${
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
                   isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
                 }`}
               >
-                {isVideoMuted ? <VideoOff className="w-3.5 h-3.5" /> : <Video className="w-3.5 h-3.5" />}
+                {isVideoMuted ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
               </button>
             </div>
           </div>
         </div>
 
         {/* Right: Clinical Note Form (7 cols) */}
-        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="lg:col-span-7 bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D3D4C0]/60">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Clinical Consultation Note</h3>
-              <span className="text-[10px] font-mono text-teal-700 uppercase font-semibold">
+              <h3 className="text-xl font-serif font-bold text-[#1f2229]">Clinical Consultation Note</h3>
+              <span className="text-[10px] font-mono text-teal-800 uppercase font-semibold">
                 Saves to ABHA Longitudinal Timeline
               </span>
             </div>
@@ -246,7 +246,7 @@ export function ConsultationPage() {
                 required
                 value={chiefComplaint}
                 onChange={(e) => setChiefComplaint(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
               />
             </div>
 
@@ -256,7 +256,7 @@ export function ConsultationPage() {
                 rows="2"
                 value={clinicalObservations}
                 onChange={(e) => setClinicalObservations(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
               />
             </div>
 
@@ -267,18 +267,18 @@ export function ConsultationPage() {
                 required
                 value={diagnosis}
                 onChange={(e) => setDiagnosis(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-bold text-slate-900 font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-bold text-slate-900 font-sans"
               />
             </div>
 
             {/* Prescription Builder */}
-            <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
+            <div className="flex flex-col gap-2 pt-2 border-t border-[#D3D4C0]/60">
               <div className="flex items-center justify-between">
                 <label className="font-bold text-slate-700">Medication Regimen (E-Prescription)</label>
                 <button
                   type="button"
                   onClick={handleAddMedicine}
-                  className="text-xs font-bold text-teal-700 hover:text-teal-900 flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+                  className="text-xs font-bold text-teal-800 hover:text-teal-950 flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Add Medication</span>
@@ -287,14 +287,14 @@ export function ConsultationPage() {
 
               <div className="flex flex-col gap-2">
                 {prescription.map((med, idx) => (
-                  <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-2">
+                  <div key={idx} className="p-3 bg-[#FAF7F2] rounded-2xl border border-[#D3D4C0] flex flex-col gap-2">
                     <div className="flex items-center justify-between gap-2">
                       <input
                         type="text"
                         placeholder="Medicine name (e.g. Tab. Ferrous Ascorbate 100mg)"
                         value={med.medicine}
                         onChange={(e) => handleUpdateMedicine(idx, "medicine", e.target.value)}
-                        className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-teal-600"
+                        className="flex-1 px-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-700"
                       />
                       <button
                         type="button"
@@ -310,21 +310,21 @@ export function ConsultationPage() {
                         placeholder="Frequency (1-0-1)"
                         value={med.frequency}
                         onChange={(e) => handleUpdateMedicine(idx, "frequency", e.target.value)}
-                        className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs"
+                        className="px-2.5 py-1.5 bg-white border border-[#D3D4C0] rounded-lg text-xs"
                       />
                       <input
                         type="text"
                         placeholder="Duration (5 days)"
                         value={med.duration}
                         onChange={(e) => handleUpdateMedicine(idx, "duration", e.target.value)}
-                        className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs"
+                        className="px-2.5 py-1.5 bg-white border border-[#D3D4C0] rounded-lg text-xs"
                       />
                       <input
                         type="text"
                         placeholder="Instructions"
                         value={med.instructions}
                         onChange={(e) => handleUpdateMedicine(idx, "instructions", e.target.value)}
-                        className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs"
+                        className="px-2.5 py-1.5 bg-white border border-[#D3D4C0] rounded-lg text-xs"
                       />
                     </div>
                   </div>
@@ -333,7 +333,7 @@ export function ConsultationPage() {
             </div>
 
             {/* Downstream Referral Box */}
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-3">
+            <div className="p-4 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <input
@@ -341,7 +341,7 @@ export function ConsultationPage() {
                     id="referralNeededCheck"
                     checked={referralNeeded}
                     onChange={(e) => setReferralNeeded(e.target.checked)}
-                    className="w-4 h-4 text-teal-600 rounded"
+                    className="w-4 h-4 text-teal-800 rounded"
                   />
                   <label htmlFor="referralNeededCheck" className="font-bold text-slate-800 text-xs cursor-pointer select-none">
                     Issue Downstream Closed-Loop Referral Ticket
@@ -351,14 +351,14 @@ export function ConsultationPage() {
               </div>
 
               {referralNeeded && (
-                <div className="flex flex-col gap-2 pt-2 border-t border-slate-200">
+                <div className="flex flex-col gap-2 pt-2 border-t border-[#D3D4C0]/60">
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex flex-col gap-0.5">
                       <label className="text-[10px] font-bold text-slate-700">Destination Facility</label>
                       <select
                         value={referralDetails.toFacility}
                         onChange={(e) => setReferralDetails({ ...referralDetails, toFacility: e.target.value })}
-                        className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
+                        className="px-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs"
                       >
                         {facilities.map((f) => (
                           <option key={f._id} value={f._id}>
@@ -373,7 +373,7 @@ export function ConsultationPage() {
                       <select
                         value={referralDetails.urgency}
                         onChange={(e) => setReferralDetails({ ...referralDetails, urgency: e.target.value })}
-                        className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
+                        className="px-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs"
                       >
                         <option value="routine">Routine</option>
                         <option value="urgent">Urgent</option>
@@ -388,7 +388,7 @@ export function ConsultationPage() {
                       type="text"
                       value={referralDetails.reason}
                       onChange={(e) => setReferralDetails({ ...referralDetails, reason: e.target.value })}
-                      className="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs"
+                      className="px-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs"
                     />
                   </div>
                 </div>
@@ -401,22 +401,23 @@ export function ConsultationPage() {
                 rows="2"
                 value={advice}
                 onChange={(e) => setAdvice(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
               />
             </div>
 
             <button
               type="submit"
               disabled={saving}
-              className="w-full py-3 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none mt-2"
+              className="w-full py-3.5 bg-[#1f2229] hover:bg-teal-900 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none mt-2"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>{saving ? "Finalizing Note & Dispatching..." : "Finalize Consultation & Sync to ABHA Record"}</span>
+              <span>{saving ? "Finalizing Note & Dispatching..." : "Finalize Consultation & Sync to ABHA"}</span>
+              <span className="text-xs text-teal-400">✦</span>
             </button>
           </form>
 
           {completedResult && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-col gap-2 text-left keep-note animate-fadeIn">
+            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col gap-2 text-left keep-note animate-fadeIn">
               <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>Consultation saved to ABHA Longitudinal Timeline!</span>

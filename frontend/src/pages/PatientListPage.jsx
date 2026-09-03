@@ -117,25 +117,31 @@ export function PatientListPage() {
 
   const roleInfo = getRoleHeader();
 
+  const getInitials = (p) => {
+    if (!p.name) return "PT";
+    const parts = p.name.split(" ");
+    return ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase();
+  };
+
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto font-sans text-slate-800">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs text-left">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs text-left">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
             {roleInfo.tag}
           </span>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             {roleInfo.title}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
             {roleInfo.desc}
           </p>
         </div>
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none shrink-0"
+          className="px-5 py-3 bg-[#1f2229] hover:bg-teal-900 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Enroll New Patient</span>
@@ -156,10 +162,10 @@ export function PatientListPage() {
             <button
               key={tab.id}
               onClick={() => setFilterTag(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer border ${
                 filterTag === tab.id
-                  ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  ? "bg-[#1f2229] text-white border-[#1f2229] shadow-xs"
+                  : "bg-white text-slate-700 border-[#D3D4C0] hover:bg-[#F3E4C9]/40"
               }`}
             >
               {tab.label}
@@ -175,15 +181,15 @@ export function PatientListPage() {
             placeholder="Search name, ABHA ID, village..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-teal-600 font-sans"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-[#D3D4C0] rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-teal-700 font-sans shadow-2xs"
           />
         </div>
       </div>
 
-      {/* Patient Grid */}
+      {/* Patient Grid with Clinicians/Heidi Card Styles */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPatients.length === 0 ? (
-          <div className="col-span-full py-16 text-center bg-white border border-slate-200 rounded-2xl text-slate-400 text-xs">
+          <div className="col-span-full py-16 text-center bg-white border border-[#D3D4C0] rounded-3xl text-slate-400 text-xs">
             No patients found matching the current search or filter criteria.
           </div>
         ) : (
@@ -193,30 +199,42 @@ export function PatientListPage() {
             return (
               <div
                 key={p._id}
-                className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col justify-between gap-4 text-left shadow-xs hover:shadow-md transition-all group"
+                className="bg-white border border-[#D3D4C0] rounded-3xl p-6 flex flex-col justify-between gap-4 text-left shadow-2xs hover:shadow-md transition-all group"
               >
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2.5">
                   <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 group-hover:text-teal-800 transition-colors">
-                        {p.name}
-                      </h3>
-                      <div className="text-[11px] font-mono text-teal-700 font-semibold mt-0.5">
-                        ABHA: {p.abhaId}
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-10 h-10 rounded-2xl border-2 border-dashed flex items-center justify-center text-xs font-bold shrink-0 ${
+                          isHighRisk
+                            ? "border-rose-400 bg-rose-50 text-rose-800"
+                            : "border-[#D3D4C0] bg-[#FAF7F2] text-slate-800"
+                        }`}
+                      >
+                        {getInitials(p)}
+                      </div>
+                      <div>
+                        <h3 className="text-base font-serif font-bold text-[#1f2229] group-hover:text-teal-800 transition-colors">
+                          {p.name}
+                        </h3>
+                        <div className="text-[10.5px] font-mono text-teal-800 font-semibold mt-0.5">
+                          ABHA: {p.abhaId}
+                        </div>
                       </div>
                     </div>
+
                     {isHighRisk ? (
-                      <span className="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-md text-[9px] font-bold uppercase">
+                      <span className="px-2 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 rounded-md text-[9px] font-bold uppercase">
                         High Risk
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[9px] font-bold uppercase">
+                      <span className="px-2 py-0.5 bg-[#FAF7F2] border border-[#D3D4C0] text-slate-700 rounded-md text-[9px] font-bold uppercase">
                         {p.riskTier || "Low"}
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                  <div className="flex items-center gap-2 text-xs text-slate-500 font-medium font-sans">
                     <span>{p.village}</span>
                     <span>·</span>
                     <span>{p.age} yrs ({p.gender})</span>
@@ -225,11 +243,11 @@ export function PatientListPage() {
                   </div>
 
                   {/* Conditions Pills */}
-                  <div className="flex flex-wrap gap-1.5 mt-1">
+                  <div className="flex flex-wrap gap-1.5 mt-0.5">
                     {p.conditions?.map((c, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 bg-slate-50 text-slate-700 rounded-md text-[10px] font-medium border border-slate-200"
+                        className="px-2.5 py-0.5 bg-[#FAF7F2] text-slate-700 rounded-md text-[10px] font-medium border border-[#D3D4C0]"
                       >
                         {c}
                       </span>
@@ -238,7 +256,7 @@ export function PatientListPage() {
 
                   {/* Latest Vitals Strip */}
                   {p.vitalsLatest && (
-                    <div className="mt-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-[10px] font-mono text-slate-700">
+                    <div className="mt-2 p-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl flex items-center justify-between text-[10.5px] font-mono text-slate-700">
                       <span>BP: <strong>{p.vitalsLatest.systolicBP ? `${p.vitalsLatest.systolicBP}/${p.vitalsLatest.diastolicBP}` : "120/80"}</strong></span>
                       <span>SpO2: <strong>{p.vitalsLatest.spO2 || 98}%</strong></span>
                       <span>Hb: <strong>{p.vitalsLatest.hemoglobin || 11.2} g/dL</strong></span>
@@ -247,15 +265,15 @@ export function PatientListPage() {
                 </div>
 
                 {/* Card Action Buttons */}
-                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100">
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-[#D3D4C0]/60">
                   <button
                     onClick={() => {
                       setActivePatient(p);
                       navigate(`/triage/${p._id}`);
                     }}
-                    className="py-1.5 px-2 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-800 rounded-lg text-xs font-bold transition-colors cursor-pointer border border-slate-200 flex items-center justify-center gap-1"
+                    className="py-2 px-2 bg-[#FAF7F2] hover:bg-white text-slate-700 hover:text-teal-900 rounded-xl text-xs font-bold transition-colors cursor-pointer border border-[#D3D4C0] flex items-center justify-center gap-1"
                   >
-                    <Activity className="w-3 h-3 text-teal-600" />
+                    <Activity className="w-3 h-3 text-teal-700" />
                     <span>Triage</span>
                   </button>
 
@@ -264,9 +282,9 @@ export function PatientListPage() {
                       setActivePatient(p);
                       navigate(`/consultation/${p._id}`);
                     }}
-                    className="py-1.5 px-2 bg-slate-50 hover:bg-teal-50 text-slate-700 hover:text-teal-800 rounded-lg text-xs font-bold transition-colors cursor-pointer border border-slate-200 flex items-center justify-center gap-1"
+                    className="py-2 px-2 bg-[#FAF7F2] hover:bg-white text-slate-700 hover:text-teal-900 rounded-xl text-xs font-bold transition-colors cursor-pointer border border-[#D3D4C0] flex items-center justify-center gap-1"
                   >
-                    <Stethoscope className="w-3 h-3 text-teal-600" />
+                    <Stethoscope className="w-3 h-3 text-teal-700" />
                     <span>Consult</span>
                   </button>
 
@@ -275,7 +293,7 @@ export function PatientListPage() {
                       setActivePatient(p);
                       navigate(`/patient/${p._id}`);
                     }}
-                    className="py-1.5 px-2 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer border-none flex items-center justify-center gap-1"
+                    className="py-2 px-2 bg-[#1f2229] hover:bg-teal-900 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer border-none flex items-center justify-center gap-1 shadow-2xs"
                   >
                     <span>Timeline</span>
                     <ChevronRight className="w-3 h-3" />
@@ -289,18 +307,18 @@ export function PatientListPage() {
 
       {/* Add Patient Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-6 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#D3D4C0] rounded-3xl max-w-lg w-full p-7 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
+            <div className="flex justify-between items-center pb-3 border-b border-[#D3D4C0]">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Enroll New Patient</h3>
-                <span className="text-[10px] font-mono text-teal-700 uppercase font-semibold">
+                <h3 className="text-xl font-serif font-bold text-[#1f2229]">Enroll New Patient</h3>
+                <span className="text-[10px] font-mono text-teal-800 uppercase font-semibold">
                   Generates ABHA ID & Longitudinal Record
                 </span>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-xs font-bold cursor-pointer border-none"
+                className="w-7 h-7 rounded-full bg-[#FAF7F2] border border-[#D3D4C0] text-slate-600 hover:bg-slate-200 flex items-center justify-center text-xs font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -316,7 +334,7 @@ export function PatientListPage() {
                     placeholder="e.g. Kavita Shinde"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -329,7 +347,7 @@ export function PatientListPage() {
                     placeholder="e.g. 26"
                     value={formData.age}
                     onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   />
                 </div>
               </div>
@@ -340,7 +358,7 @@ export function PatientListPage() {
                   <select
                     value={formData.gender}
                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   >
                     <option value="female">Female</option>
                     <option value="male">Male</option>
@@ -353,7 +371,7 @@ export function PatientListPage() {
                     type="text"
                     value={formData.village}
                     onChange={(e) => setFormData({ ...formData, village: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -361,7 +379,7 @@ export function PatientListPage() {
                   <select
                     value={formData.bloodGroup}
                     onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   >
                     <option value="O+">O+</option>
                     <option value="A+">A+</option>
@@ -381,7 +399,7 @@ export function PatientListPage() {
                   placeholder="+91 98220 00000"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                  className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                 />
               </div>
 
@@ -392,17 +410,17 @@ export function PatientListPage() {
                   placeholder="e.g. Hypertension, Anemia, Past C-Section"
                   value={formData.conditions}
                   onChange={(e) => setFormData({ ...formData, conditions: e.target.value })}
-                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                  className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                 />
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-3 p-3 bg-[#FAF7F2] rounded-xl border border-[#D3D4C0]">
                 <input
                   type="checkbox"
                   id="pregnantCheckbox"
                   checked={formData.isPregnant}
                   onChange={(e) => setFormData({ ...formData, isPregnant: e.target.checked })}
-                  className="w-4 h-4 text-teal-600 rounded"
+                  className="w-4 h-4 text-teal-800 rounded"
                 />
                 <label htmlFor="pregnantCheckbox" className="font-semibold text-slate-800 select-none">
                   Antenatal Care (ANC) Pregnancy Registration
@@ -419,7 +437,7 @@ export function PatientListPage() {
                     placeholder="e.g. 24"
                     value={formData.gestationalWeeks}
                     onChange={(e) => setFormData({ ...formData, gestationalWeeks: e.target.value })}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-600 font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl focus:outline-none focus:border-teal-700 font-sans"
                   />
                 </div>
               )}
@@ -428,14 +446,14 @@ export function PatientListPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg cursor-pointer border-none"
+                  className="px-4 py-2.5 bg-[#FAF7F2] hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer border border-[#D3D4C0]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-lg shadow-xs transition-all cursor-pointer border-none flex items-center gap-1.5"
+                  className="px-5 py-2.5 bg-[#1f2229] hover:bg-teal-900 text-white font-bold rounded-xl shadow-xs transition-all cursor-pointer border-none flex items-center gap-1.5"
                 >
                   {creating ? "Enrolling..." : "Enroll & Save Patient"}
                 </button>

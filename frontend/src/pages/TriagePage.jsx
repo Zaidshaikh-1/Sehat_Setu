@@ -156,30 +156,30 @@ export function TriagePage() {
   const getTierBadge = (tier) => {
     switch (tier) {
       case "emergency":
-        return "bg-rose-600 text-white font-bold";
+        return "bg-rose-700 text-white font-bold";
       case "urgent-referral":
-        return "bg-amber-600 text-white font-bold";
+        return "bg-amber-700 text-white font-bold";
       case "visit-phc":
-        return "bg-teal-700 text-white font-bold";
+        return "bg-teal-800 text-white font-bold";
       case "self-care":
       default:
-        return "bg-emerald-600 text-white font-bold";
+        return "bg-emerald-700 text-white font-bold";
     }
   };
 
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto text-left font-sans text-slate-800">
       {/* Header */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
-            Module 3.1 · Decision Engine
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
+            Module 3.1 · Clinical Decision Engine
           </span>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             Frontline Clinical Triage & Risk Stratification
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Evaluates rural presentations, danger red flags, and maternal-child emergencies.
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
+            Evaluates rural presentations, danger red flags, and maternal-child emergencies without requiring active internet.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ export function TriagePage() {
               const p = patients?.find((item) => item._id === e.target.value);
               if (p) setActivePatient(p);
             }}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-600"
+            className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-700"
           >
             {patients?.map((p) => (
               <option key={p._id} value={p._id}>
@@ -204,23 +204,23 @@ export function TriagePage() {
         </div>
       </div>
 
-      {/* Main Grid: Form + Result */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Form (7 cols) */}
-        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-5">
+        <div className="lg:col-span-7 bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-5">
           {/* Patient Card Context */}
           {currentPatient && (
-            <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
+            <div className="p-4 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl flex items-center justify-between text-xs">
               <div className="flex flex-col">
-                <span className="font-bold text-slate-900">{currentPatient.name}</span>
-                <span className="text-[11px] text-teal-800 font-mono">
+                <span className="font-bold text-slate-900 text-sm font-serif">{currentPatient.name}</span>
+                <span className="text-[11px] text-teal-800 font-mono font-semibold">
                   ABHA: {currentPatient.abhaId} · {currentPatient.village}
                 </span>
               </div>
               <div className="text-right text-[11px]">
                 <span className="text-slate-500">{currentPatient.age} yrs ({currentPatient.gender})</span>
                 {currentPatient.isPregnant && (
-                  <span className="block font-bold text-amber-700">ANC {currentPatient.gestationalWeeks}w</span>
+                  <span className="block font-bold text-amber-800">ANC {currentPatient.gestationalWeeks}w</span>
                 )}
               </div>
             </div>
@@ -238,10 +238,10 @@ export function TriagePage() {
                     setCategory(cat);
                     setSelectedSymptoms([]);
                   }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
                     category === cat
-                      ? "bg-teal-700 text-white border-teal-700 shadow-xs"
-                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                      ? "bg-[#1f2229] text-white border-[#1f2229] shadow-xs"
+                      : "bg-[#FAF7F2] text-slate-700 border-[#D3D4C0] hover:bg-[#F3E4C9]/40"
                   }`}
                 >
                   {cat}
@@ -263,17 +263,17 @@ export function TriagePage() {
                   <div
                     key={i}
                     onClick={() => handleToggleSymptom(symptom)}
-                    className={`p-3 rounded-xl border text-xs font-medium cursor-pointer transition-all flex items-start gap-2 select-none ${
+                    className={`p-3 rounded-2xl border text-xs font-medium cursor-pointer transition-all flex items-start gap-2.5 select-none ${
                       isSelected
-                        ? "bg-teal-50 border-teal-600 text-teal-950 font-bold"
-                        : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
+                        ? "bg-[#F3E4C9]/70 border-teal-800 text-teal-950 font-bold shadow-2xs"
+                        : "bg-[#FAF7F2] border-[#D3D4C0] text-slate-700 hover:bg-white"
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => {}}
-                      className="mt-0.5 rounded text-teal-600 pointer-events-none"
+                      className="mt-0.5 rounded text-teal-800 pointer-events-none"
                     />
                     <span className="leading-tight">{symptom}</span>
                   </div>
@@ -283,8 +283,8 @@ export function TriagePage() {
           </div>
 
           {/* Vitals Input Row */}
-          <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
-            <label className="text-xs font-bold text-slate-700">3. Physical Vitals Readings</label>
+          <div className="flex flex-col gap-2 pt-2 border-t border-[#D3D4C0]/60">
+            <label className="text-xs font-bold text-slate-700">3. Physical Vitals Readings (Peripheral Kit)</label>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
               <div className="flex flex-col gap-0.5">
                 <span className="text-[9px] font-mono text-slate-500 uppercase">Sys BP</span>
@@ -293,7 +293,7 @@ export function TriagePage() {
                   placeholder="120"
                   value={vitals.systolicBP}
                   onChange={(e) => setVitals({ ...vitals, systolicBP: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
               <div className="flex flex-col gap-0.5">
@@ -303,7 +303,7 @@ export function TriagePage() {
                   placeholder="80"
                   value={vitals.diastolicBP}
                   onChange={(e) => setVitals({ ...vitals, diastolicBP: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
               <div className="flex flex-col gap-0.5">
@@ -313,7 +313,7 @@ export function TriagePage() {
                   placeholder="98"
                   value={vitals.spO2}
                   onChange={(e) => setVitals({ ...vitals, spO2: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
               <div className="flex flex-col gap-0.5">
@@ -323,7 +323,7 @@ export function TriagePage() {
                   placeholder="76"
                   value={vitals.pulseRate}
                   onChange={(e) => setVitals({ ...vitals, pulseRate: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
               <div className="flex flex-col gap-0.5">
@@ -334,7 +334,7 @@ export function TriagePage() {
                   placeholder="98.6"
                   value={vitals.temperature}
                   onChange={(e) => setVitals({ ...vitals, temperature: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
               <div className="flex flex-col gap-0.5">
@@ -344,7 +344,7 @@ export function TriagePage() {
                   placeholder="110"
                   value={vitals.bloodSugar}
                   onChange={(e) => setVitals({ ...vitals, bloodSugar: e.target.value })}
-                  className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-2 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-teal-700"
                 />
               </div>
             </div>
@@ -358,73 +358,70 @@ export function TriagePage() {
               placeholder="Enter specific patient statements or observations..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-teal-600 font-sans"
+              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs text-slate-800 focus:outline-none focus:border-teal-700 font-sans"
             />
           </div>
 
           <button
             onClick={handleRunTriage}
             disabled={evaluating}
-            className="w-full py-3 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+            className="w-full py-3.5 bg-[#1f2229] hover:bg-teal-900 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
           >
             <Activity className="w-4 h-4" />
-            <span>{evaluating ? "Evaluating Decision Tree..." : "Evaluate Risk & Save to Record"}</span>
+            <span>{evaluating ? "Evaluating Decision Tree..." : "Evaluate Risk & Save to ABHA Record"}</span>
+            <span className="text-xs text-teal-400">✦</span>
           </button>
         </div>
 
         {/* Right Result Card (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {triageResult ? (
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-5 text-left keep-note animate-fadeIn">
-              {/* Top Result Banner */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <span className={`px-3 py-1 rounded-lg text-xs uppercase tracking-wider ${getTierBadge(triageResult.evaluation.riskTier)}`}>
+            <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-5 text-left keep-note animate-fadeIn">
+              <div className="flex items-center justify-between pb-3 border-b border-[#D3D4C0]">
+                <span className={`px-3 py-1.5 rounded-xl text-xs uppercase tracking-wider ${getTierBadge(triageResult.evaluation.riskTier)}`}>
                   TIER: {triageResult.evaluation.riskTier}
                 </span>
                 <button
                   onClick={handleSpeakReadback}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-bold text-slate-700 flex items-center gap-1 cursor-pointer border-none"
+                  className="px-3 py-1.5 bg-[#FAF7F2] border border-[#D3D4C0] hover:bg-slate-200 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5 cursor-pointer"
                 >
                   <Volume2 className="w-3.5 h-3.5 text-slate-600" />
                   <span>{speaking ? "Playing..." : "Audio Readback"}</span>
                 </button>
               </div>
 
-              {/* Red Flags Alert Box */}
               {triageResult.evaluation.redFlags?.length > 0 && (
-                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1.5 text-rose-800 text-xs font-bold">
-                    <AlertTriangle className="w-4 h-4 text-rose-600" />
+                <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5 text-rose-900 text-xs font-bold">
+                    <AlertTriangle className="w-4 h-4 text-rose-700" />
                     <span>Danger Signs Detected:</span>
                   </div>
-                  <ul className="list-disc pl-5 m-0 text-xs text-rose-700 flex flex-col gap-0.5">
+                  <ul className="list-disc pl-5 m-0 text-xs text-rose-800 flex flex-col gap-0.5 font-medium">
                     {triageResult.evaluation.redFlags.map((flag, idx) => (
-                      <li key={idx} className="font-semibold">{flag}</li>
+                      <li key={idx}>{flag}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
-              {/* Recommendation Content */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] font-mono font-bold uppercase text-slate-500">Clinical Recommendation</span>
-                <p className="text-xs text-slate-700 leading-relaxed font-medium bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <p className="text-xs text-slate-700 leading-relaxed font-medium bg-[#FAF7F2] p-4 rounded-2xl border border-[#D3D4C0]">
                   {triageResult.evaluation.recommendation}
                 </p>
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <span className="text-[10px] font-mono font-bold uppercase text-slate-500">Required Action</span>
-                <p className="text-xs text-teal-900 font-bold bg-teal-50 p-3 rounded-xl border border-teal-200">
+                <p className="text-xs text-teal-950 font-bold bg-[#F3E4C9]/60 p-3.5 rounded-2xl border border-[#D3D4C0]">
                   {triageResult.evaluation.actionRequired}
                 </p>
               </div>
 
-              {/* Next Steps Buttons */}
-              <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
+              <div className="flex flex-col gap-2 pt-2 border-t border-[#D3D4C0]/60">
                 <button
                   onClick={() => navigate(`/consultation/${currentPatient._id}`)}
-                  className="w-full py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+                  className="w-full py-3 bg-[#1f2229] hover:bg-teal-900 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
                 >
                   <Stethoscope className="w-4 h-4" />
                   <span>Start Assisted Teleconsultation</span>
@@ -433,16 +430,16 @@ export function TriagePage() {
 
                 <button
                   onClick={() => navigate(`/referrals`)}
-                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+                  className="w-full py-2.5 bg-[#FAF7F2] hover:bg-white text-slate-800 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-[#D3D4C0]"
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="w-4 h-4 text-teal-800" />
                   <span>Inspect Referral on Live Kanban</span>
                 </button>
               </div>
             </div>
           ) : (
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center flex flex-col items-center justify-center gap-3 min-h-[360px] text-slate-400">
-              <Activity className="w-8 h-8 text-slate-300" />
+            <div className="bg-white p-8 rounded-3xl border border-[#D3D4C0] text-center flex flex-col items-center justify-center gap-3 min-h-[380px] text-slate-400">
+              <Activity className="w-9 h-9 text-[#D3D4C0]" />
               <div className="flex flex-col gap-1 max-w-xs">
                 <h4 className="text-sm font-bold text-slate-700">Triage Decision Output</h4>
                 <p className="text-xs text-slate-500">

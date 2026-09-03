@@ -74,22 +74,22 @@ export function DiagnosticsPage() {
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto text-left font-sans text-slate-800">
       {/* Top Banner */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
             Module 3.6 · Laboratory Infrastructure
           </span>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             Diagnostic Coordination & Equipment Status
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
             Machine uptime tracking and direct test ordering to prevent broken-equipment referral loops.
           </p>
         </div>
 
         <button
           onClick={loadDiagnostics}
-          className="p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-colors cursor-pointer border-none shrink-0"
+          className="p-3.5 bg-white hover:bg-[#FAF7F2] text-slate-700 rounded-2xl transition-colors cursor-pointer border border-[#D3D4C0]"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
@@ -100,29 +100,29 @@ export function DiagnosticsPage() {
         {diagnostics.map((test) => {
           const isWorking = test.equipmentStatus === "working";
           const statusBadge = isWorking
-            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-            : "bg-rose-50 text-rose-700 border-rose-200";
+            ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+            : "bg-rose-50 text-rose-800 border-rose-200";
 
           return (
             <div
               key={test._id}
-              className={`bg-white border rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-4 text-left transition-all ${
-                isWorking ? "border-slate-200" : "border-rose-200 bg-rose-50/20"
+              className={`bg-white border rounded-3xl p-6 shadow-2xs flex flex-col justify-between gap-4 text-left transition-all ${
+                isWorking ? "border-[#D3D4C0]" : "border-rose-300 bg-rose-50/15"
               }`}
             >
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2.5">
                 <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-mono uppercase font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                  <span className="text-[10px] font-mono uppercase font-bold text-teal-800 bg-[#FAF7F2] px-2.5 py-0.5 rounded-md border border-[#D3D4C0]">
                     {test.category}
                   </span>
-                  <span className={`px-2 py-0.5 text-[9px] font-bold rounded border uppercase ${statusBadge}`}>
+                  <span className={`px-2 py-0.5 text-[9px] font-bold rounded-md border uppercase ${statusBadge}`}>
                     {test.equipmentStatus}
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 mt-1">{test.testName}</h3>
+                <h3 className="text-base font-serif font-bold text-slate-900 mt-1">{test.testName}</h3>
 
-                <div className="flex flex-col gap-1 text-[11px] text-slate-500 font-medium">
+                <div className="flex flex-col gap-1 text-[11px] text-slate-500 font-medium font-sans">
                   <span className="font-mono text-slate-700">{test.facility?.name}</span>
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-400" /> Turnaround: ~{test.turnaroundHours} hours</span>
                   <span className="text-slate-400 text-[10px]">{test.sampleRequirements}</span>
@@ -130,26 +130,26 @@ export function DiagnosticsPage() {
               </div>
 
               {/* Status Toggle & Order */}
-              <div className="flex flex-col gap-2 pt-3 border-t border-slate-100">
+              <div className="flex flex-col gap-2 pt-3 border-t border-[#D3D4C0]/60">
                 <div className="flex items-center justify-between text-[10px] font-mono">
                   <span className="text-slate-500">Equipment Uptime:</span>
                   <div className="flex gap-1">
                     <button
                       onClick={() => handleEquipmentStatusToggle(test._id, "working")}
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer border ${
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold cursor-pointer border ${
                         test.equipmentStatus === "working"
-                          ? "bg-emerald-600 text-white border-emerald-600"
-                          : "bg-slate-100 text-slate-600 border-slate-200"
+                          ? "bg-emerald-700 text-white border-emerald-700"
+                          : "bg-[#FAF7F2] text-slate-700 border-[#D3D4C0]"
                       }`}
                     >
                       Working
                     </button>
                     <button
                       onClick={() => handleEquipmentStatusToggle(test._id, "broken")}
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer border ${
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold cursor-pointer border ${
                         test.equipmentStatus === "broken"
-                          ? "bg-rose-600 text-white border-rose-600"
-                          : "bg-slate-100 text-slate-600 border-slate-200"
+                          ? "bg-rose-700 text-white border-rose-700"
+                          : "bg-[#FAF7F2] text-slate-700 border-[#D3D4C0]"
                       }`}
                     >
                       Broken
@@ -160,9 +160,9 @@ export function DiagnosticsPage() {
                 <button
                   disabled={!isWorking}
                   onClick={() => setOrderModalTest(test)}
-                  className={`w-full py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none ${
+                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none ${
                     isWorking
-                      ? "bg-teal-700 hover:bg-teal-800 text-white shadow-xs"
+                      ? "bg-[#1f2229] hover:bg-teal-900 text-white shadow-xs"
                       : "bg-slate-200 text-slate-400 cursor-not-allowed"
                   }`}
                 >
@@ -177,25 +177,25 @@ export function DiagnosticsPage() {
 
       {/* Order Modal */}
       {orderModalTest && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#D3D4C0] rounded-3xl max-w-md w-full p-7 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
+            <div className="flex justify-between items-center pb-3 border-b border-[#D3D4C0]">
               <div>
-                <h3 className="text-base font-bold text-slate-900">Order Diagnostic Test</h3>
-                <span className="text-[10px] font-mono text-teal-700 uppercase font-semibold">
+                <h3 className="text-xl font-serif font-bold text-[#1f2229]">Order Diagnostic Test</h3>
+                <span className="text-[10px] font-mono text-teal-800 uppercase font-semibold">
                   {orderModalTest.testName}
                 </span>
               </div>
               <button
                 onClick={() => setOrderModalTest(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-xs font-bold cursor-pointer border-none"
+                className="w-7 h-7 rounded-full bg-[#FAF7F2] border border-[#D3D4C0] text-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {orderSuccessMessage ? (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs rounded-xl flex items-center gap-2 font-bold">
+              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs rounded-2xl flex items-center gap-2 font-bold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>{orderSuccessMessage}</span>
               </div>
@@ -207,7 +207,7 @@ export function DiagnosticsPage() {
                     required
                     value={selectedPatientId}
                     onChange={(e) => setSelectedPatientId(e.target.value)}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-sans"
+                    className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl font-sans"
                   >
                     <option value="">-- Choose Patient --</option>
                     {patients?.map((p) => (
@@ -218,7 +218,7 @@ export function DiagnosticsPage() {
                   </select>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex flex-col gap-1 text-[11px] text-slate-600">
+                <div className="p-3.5 bg-[#FAF7F2] rounded-2xl border border-[#D3D4C0] flex flex-col gap-1 text-[11px] text-slate-600">
                   <div>Facility: <strong>{orderModalTest.facility?.name}</strong></div>
                   <div>Estimated Turnaround: <strong>{orderModalTest.turnaroundHours} hours</strong></div>
                   <div>Sample: <strong>{orderModalTest.sampleRequirements}</strong></div>
@@ -228,14 +228,14 @@ export function DiagnosticsPage() {
                   <button
                     type="button"
                     onClick={() => setOrderModalTest(null)}
-                    className="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg cursor-pointer border-none"
+                    className="px-4 py-2.5 bg-[#FAF7F2] text-slate-700 font-bold rounded-xl cursor-pointer border border-[#D3D4C0]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submittingOrder}
-                    className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-lg cursor-pointer border-none"
+                    className="px-5 py-2.5 bg-[#1f2229] hover:bg-teal-900 text-white font-bold rounded-xl cursor-pointer border-none shadow-xs"
                   >
                     {submittingOrder ? "Placing Order..." : "Confirm & Sync"}
                   </button>

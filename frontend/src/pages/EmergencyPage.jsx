@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Phone,
   Radio,
+  Clock,
 } from "lucide-react";
 
 export function EmergencyPage() {
@@ -57,37 +58,37 @@ export function EmergencyPage() {
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto text-left font-sans text-slate-800">
       {/* Top Banner */}
-      <div className="bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#1f2229] text-white p-7 rounded-3xl border border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-rose-400">
             Module 3.10 · Fast-Track Dispatch
           </span>
-          <h2 className="text-2xl font-bold text-white tracking-tight mt-1">
+          <h2 className="text-3xl font-serif font-bold text-white tracking-tight mt-1">
             108 Emergency Ambulance Escalation
           </h2>
-          <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+          <p className="text-xs text-slate-300 mt-1 max-w-2xl font-sans">
             Bypasses all standard clinical queues. Dispatches nearest 108 ambulance and activates trauma bay at District Hospital.
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-rose-400 font-mono text-xs">
-          <Radio className="w-4 h-4 text-rose-400" />
+          <Radio className="w-4 h-4 text-rose-400 animate-pulse" />
           <span>Ambulance Telemetry Active</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left SOS Form */}
-        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-5">
+        {/* Left SOS Form (7 cols) */}
+        <div className="lg:col-span-7 bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-5">
           <form onSubmit={handleTriggerSOS} className="flex flex-col gap-4 text-xs">
-            <div className="flex flex-col items-center justify-center p-6 bg-rose-50 rounded-2xl border border-rose-200 gap-3">
+            <div className="flex flex-col items-center justify-center p-7 bg-rose-50 rounded-2xl border border-rose-200 gap-3">
               <button
                 type="submit"
                 disabled={triggering}
                 className="w-24 h-24 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex flex-col items-center justify-center gap-1 shadow-md hover:scale-105 transition-all cursor-pointer border-none"
               >
                 <ShieldAlert className="w-8 h-8 text-white" />
-                <span className="text-[11px] font-bold tracking-wider uppercase">1-TAP SOS</span>
+                <span className="text-[10px] font-bold tracking-wider uppercase font-mono">1-TAP SOS</span>
               </button>
               <span className="text-xs font-mono text-rose-900 font-bold">
                 {triggering ? "BROADCASTING EMERGENCY DISPATCH..." : "Tap to Trigger Immediate 108 Emergency Dispatch"}
@@ -99,7 +100,7 @@ export function EmergencyPage() {
               <select
                 value={patientId}
                 onChange={(e) => setPatientId(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl font-semibold font-sans"
               >
                 <option value="">-- Anonymous / Roadside Incident --</option>
                 {patients?.map((p) => (
@@ -115,7 +116,7 @@ export function EmergencyPage() {
               <select
                 value={emergencyType}
                 onChange={(e) => setEmergencyType(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl font-semibold font-sans"
               >
                 <option value="Obstetric Emergency (Hemorrhage / Pre-Eclampsia)">Obstetric Emergency (Hemorrhage / Eclampsia / Labor)</option>
                 <option value="Acute Trauma / Road Traffic Accident">Acute Trauma / Road Traffic Accident</option>
@@ -135,7 +136,7 @@ export function EmergencyPage() {
                 required
                 value={landmark}
                 onChange={(e) => setLandmark(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-medium text-slate-900 font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl font-medium text-slate-900 font-sans"
               />
             </div>
 
@@ -145,13 +146,13 @@ export function EmergencyPage() {
                 rows="2"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-sans"
+                className="px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl font-sans"
               />
             </div>
           </form>
 
           {sosResult && (
-            <div className="p-4 bg-slate-900 text-white border border-slate-800 rounded-xl flex flex-col gap-2 keep-note animate-fadeIn">
+            <div className="p-5 bg-[#1f2229] text-white border border-slate-800 rounded-2xl flex flex-col gap-2 keep-note animate-fadeIn">
               <div className="flex items-center gap-2 text-rose-300 font-bold text-xs">
                 <CheckCircle2 className="w-4 h-4 text-rose-400" />
                 <span>108 FLEET DISPATCHED · SOS CODE: {sosResult.sosCode}</span>
@@ -166,11 +167,11 @@ export function EmergencyPage() {
           )}
         </div>
 
-        {/* Right Active Emergency Stream */}
+        {/* Right Active Emergency Stream (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-xs font-bold text-slate-900">Active High-Priority Escalations</span>
+          <div className="bg-white p-6 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#D3D4C0]/60">
+              <span className="text-xs font-serif font-bold text-slate-900">Active High-Priority Escalations</span>
               <span className="px-2 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 text-[10px] font-mono font-bold rounded">
                 {activeEmergencies.length} Active
               </span>
@@ -185,10 +186,10 @@ export function EmergencyPage() {
                 activeEmergencies.map((em) => (
                   <div
                     key={em._id}
-                    className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2 text-xs"
+                    className="p-4 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl flex flex-col gap-2 text-xs"
                   >
                     <div className="flex items-start justify-between">
-                      <strong className="text-slate-900">{em.patient?.name || "Emergency Patient"}</strong>
+                      <strong className="text-slate-900 font-serif text-sm">{em.patient?.name || "Emergency Patient"}</strong>
                       <span className="px-2 py-0.5 bg-rose-600 text-white rounded text-[9px] font-mono font-bold uppercase">
                         {em.status}
                       </span>
@@ -198,7 +199,7 @@ export function EmergencyPage() {
                       {em.reason}
                     </p>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-2 border-t border-slate-200">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-2 border-t border-[#D3D4C0]/50">
                       <span>Destination: {em.toFacility?.name?.split(" ")[0] || "Hospital"}</span>
                       <span>108 Ambulance</span>
                     </div>

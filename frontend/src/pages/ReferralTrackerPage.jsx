@@ -15,10 +15,10 @@ import {
 } from "lucide-react";
 
 const COLUMNS = [
-  { id: "issued", title: "1. Issued Ticket", subtitle: "Awaiting Departure", color: "border-slate-200 bg-slate-50" },
-  { id: "traveling", title: "2. Patient Traveling", subtitle: "En-Route to Facility", color: "border-amber-200 bg-amber-50/30" },
-  { id: "arrived", title: "3. Arrived at Facility", subtitle: "Triage & Queue Intact", color: "border-purple-200 bg-purple-50/30" },
-  { id: "seen", title: "4. Seen & Feedback Closed", subtitle: "Milestone Verified", color: "border-emerald-200 bg-emerald-50/30" },
+  { id: "issued", title: "1. Issued Ticket", subtitle: "Awaiting Departure", color: "border-[#D3D4C0] bg-[#FAF7F2]" },
+  { id: "traveling", title: "2. Patient Traveling", subtitle: "En-Route to Facility", color: "border-amber-200 bg-amber-50/40" },
+  { id: "arrived", title: "3. Arrived at Facility", subtitle: "Triage & Queue Intact", color: "border-purple-200 bg-purple-50/40" },
+  { id: "seen", title: "4. Seen & Feedback Closed", subtitle: "Milestone Verified", color: "border-emerald-200 bg-emerald-50/40" },
 ];
 
 export function ReferralTrackerPage() {
@@ -121,44 +121,44 @@ export function ReferralTrackerPage() {
   const getUrgencyPill = (urgency) => {
     switch (urgency) {
       case "emergency":
-        return "bg-rose-600 text-white font-bold";
+        return "bg-rose-700 text-white font-bold";
       case "urgent":
-        return "bg-amber-600 text-white font-bold";
+        return "bg-amber-700 text-white font-bold";
       case "routine":
       default:
-        return "bg-slate-100 text-slate-700 font-semibold";
+        return "bg-[#FAF7F2] border border-[#D3D4C0] text-slate-700 font-semibold";
     }
   };
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto text-left font-sans text-slate-800">
       {/* Top Banner */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800">
             Module 3.5 · Closed-Loop Tracking
           </span>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight mt-1">
+          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight mt-1">
             Referral State Machine Board
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
             Real-time inter-facility status transitions ensuring patients do not drop out between sub-centres and district hospitals.
           </p>
         </div>
 
         {/* Stats Strip */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col text-left">
+          <div className="p-3.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl flex flex-col text-left">
             <span className="text-[10px] font-mono text-slate-500 font-bold uppercase">Referral Completion</span>
-            <span className="text-xl font-bold text-slate-900">{stats.completionRate}%</span>
+            <span className="text-2xl font-serif font-bold text-slate-900">{stats.completionRate}%</span>
           </div>
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col text-left">
+          <div className="p-3.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl flex flex-col text-left">
             <span className="text-[10px] font-mono text-slate-500 font-bold uppercase">Active In-Transit</span>
-            <span className="text-xl font-bold text-slate-900">{stats.issued + stats.traveling + stats.arrived}</span>
+            <span className="text-2xl font-serif font-bold text-slate-900">{stats.issued + stats.traveling + stats.arrived}</span>
           </div>
           <button
             onClick={fetchKanban}
-            className="p-3 bg-slate-100 hover:bg-slate-200 rounded-xl text-slate-700 transition-colors cursor-pointer border-none"
+            className="p-3.5 bg-white hover:bg-[#FAF7F2] rounded-2xl text-slate-700 transition-colors cursor-pointer border border-[#D3D4C0]"
             title="Refresh Board"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -175,17 +175,17 @@ export function ReferralTrackerPage() {
             return (
               <div
                 key={col.id}
-                className={`rounded-2xl border ${col.color} p-4 flex flex-col gap-3 min-h-[480px] shadow-xs`}
+                className={`rounded-3xl border ${col.color} p-4 flex flex-col gap-3 min-h-[480px] shadow-2xs`}
               >
                 {/* Column Header */}
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div className="flex items-center justify-between pb-2 border-b border-[#D3D4C0]/60">
                   <div className="flex flex-col text-left">
                     <h3 className="text-xs font-bold text-slate-900 uppercase font-mono tracking-tight">
                       {col.title}
                     </h3>
-                    <span className="text-[10px] text-slate-500">{col.subtitle}</span>
+                    <span className="text-[10px] text-slate-500 font-sans">{col.subtitle}</span>
                   </div>
-                  <span className="w-5 h-5 rounded-md bg-white border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-700 font-mono">
+                  <span className="w-6 h-6 rounded-lg bg-white border border-[#D3D4C0] flex items-center justify-center text-[10.5px] font-bold text-slate-700 font-mono">
                     {cards.length}
                   </span>
                 </div>
@@ -196,8 +196,8 @@ export function ReferralTrackerPage() {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`flex-1 flex flex-col gap-2.5 transition-colors rounded-xl p-1 ${
-                        snapshot.isDraggingOver ? "bg-teal-50/50" : ""
+                      className={`flex-1 flex flex-col gap-2.5 transition-colors rounded-2xl p-1 ${
+                        snapshot.isDraggingOver ? "bg-[#F3E4C9]/40" : ""
                       }`}
                     >
                       {cards.map((refItem, index) => {
@@ -212,16 +212,16 @@ export function ReferralTrackerPage() {
                                 {...providedDrag.draggableProps}
                                 {...providedDrag.dragHandleProps}
                                 onClick={() => setSelectedReferral(refItem)}
-                                className={`bg-white border rounded-xl p-4 flex flex-col gap-2.5 text-left cursor-grab transition-all select-none ${
+                                className={`bg-white border rounded-2xl p-4 flex flex-col gap-2.5 text-left cursor-grab transition-all select-none ${
                                   snapshotDrag.isDragging
-                                    ? "shadow-xl ring-2 ring-teal-600"
-                                    : "shadow-xs hover:shadow-md"
+                                    ? "shadow-2xl ring-2 ring-teal-700"
+                                    : "shadow-2xs hover:shadow-md"
                                 } ${
                                   isEmergency
-                                    ? "border-rose-300"
+                                    ? "border-rose-300 bg-rose-50/20"
                                     : isUrgent
                                     ? "border-amber-300"
-                                    : "border-slate-200"
+                                    : "border-[#D3D4C0]"
                                 }`}
                               >
                                 <div className="flex items-start justify-between gap-2">
@@ -229,30 +229,30 @@ export function ReferralTrackerPage() {
                                     <span className="text-xs font-bold text-slate-900 hover:text-teal-800">
                                       {refItem.patient?.name || "Patient"}
                                     </span>
-                                    <span className="text-[10px] font-mono text-teal-700 font-semibold">
+                                    <span className="text-[10px] font-mono text-teal-800 font-semibold">
                                       {refItem.referralCode}
                                     </span>
                                   </div>
-                                  <span className={`px-2 py-0.5 rounded text-[9px] uppercase ${getUrgencyPill(refItem.urgency)}`}>
+                                  <span className={`px-2 py-0.5 rounded-md text-[9px] uppercase ${getUrgencyPill(refItem.urgency)}`}>
                                     {refItem.urgency}
                                   </span>
                                 </div>
 
-                                <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between text-[10px] font-medium text-slate-700">
+                                <div className="p-2 bg-[#FAF7F2] rounded-xl border border-[#D3D4C0] flex items-center justify-between text-[10px] font-medium text-slate-700">
                                   <span className="truncate max-w-[45%] text-slate-600 font-mono">
                                     {refItem.fromFacility?.name?.split(" ")[0] || "PHC"}
                                   </span>
-                                  <ArrowRight className="w-3 h-3 text-teal-600 shrink-0" />
+                                  <ArrowRight className="w-3 h-3 text-teal-800 shrink-0" />
                                   <span className="truncate max-w-[45%] font-bold text-slate-900 font-mono">
                                     {refItem.toFacility?.name?.split(" ")[0] || "Hospital"}
                                   </span>
                                 </div>
 
-                                <p className="text-[11px] text-slate-600 leading-tight line-clamp-2">
+                                <p className="text-[11px] text-slate-600 leading-tight line-clamp-2 font-sans">
                                   {refItem.reason}
                                 </p>
 
-                                <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+                                <div className="flex items-center justify-between pt-2 border-t border-[#D3D4C0]/50 text-[10px] text-slate-400 font-mono">
                                   <span>{refItem.transportMode}</span>
 
                                   {col.id === "issued" && (
@@ -261,9 +261,9 @@ export function ReferralTrackerPage() {
                                         e.stopPropagation();
                                         handleAdvanceStatus(refItem, "traveling");
                                       }}
-                                      className="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold rounded cursor-pointer border-none"
+                                      className="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold rounded-md cursor-pointer border-none"
                                     >
-                                      Move Traveling
+                                      ➔ Traveling
                                     </button>
                                   )}
                                   {col.id === "traveling" && (
@@ -272,9 +272,9 @@ export function ReferralTrackerPage() {
                                         e.stopPropagation();
                                         handleAdvanceStatus(refItem, "arrived");
                                       }}
-                                      className="px-2 py-0.5 bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold rounded cursor-pointer border-none"
+                                      className="px-2 py-0.5 bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold rounded-md cursor-pointer border-none"
                                     >
-                                      Move Arrived
+                                      ➔ Arrived
                                     </button>
                                   )}
                                   {col.id === "arrived" && (
@@ -283,13 +283,13 @@ export function ReferralTrackerPage() {
                                         e.stopPropagation();
                                         handleAdvanceStatus(refItem, "seen");
                                       }}
-                                      className="px-2 py-0.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold rounded cursor-pointer border-none"
+                                      className="px-2 py-0.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold rounded-md cursor-pointer border-none"
                                     >
-                                      Close Feedback
+                                      ➔ Close Feedback
                                     </button>
                                   )}
                                   {col.id === "seen" && (
-                                    <span className="text-emerald-700 font-bold">Closed</span>
+                                    <span className="text-emerald-800 font-bold">Feedback Closed</span>
                                   )}
                                 </div>
                               </div>
@@ -309,14 +309,14 @@ export function ReferralTrackerPage() {
 
       {/* Detail Modal */}
       {selectedReferral && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-6 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
-            <div className="flex justify-between items-start pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-[#D3D4C0] rounded-3xl max-w-lg w-full p-7 shadow-2xl flex flex-col gap-4 text-left animate-fadeIn">
+            <div className="flex justify-between items-start pb-3 border-b border-[#D3D4C0]">
               <div className="flex flex-col">
-                <span className="text-[10px] font-mono uppercase font-bold text-teal-700">
+                <span className="text-[10px] font-mono uppercase font-bold text-teal-800">
                   Closed-Loop Feedback Audit History
                 </span>
-                <h3 className="text-lg font-bold text-slate-900 mt-0.5">
+                <h3 className="text-xl font-serif font-bold text-slate-900 mt-0.5">
                   Referral #{selectedReferral.referralCode}
                 </h3>
                 <span className="text-xs text-slate-500">
@@ -325,13 +325,13 @@ export function ReferralTrackerPage() {
               </div>
               <button
                 onClick={() => setSelectedReferral(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold cursor-pointer border-none"
+                className="w-7 h-7 rounded-full bg-[#FAF7F2] border border-[#D3D4C0] hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-1.5 text-xs">
+            <div className="p-4 bg-[#FAF7F2] rounded-2xl border border-[#D3D4C0] flex flex-col gap-1.5 text-xs">
               <div className="flex justify-between">
                 <span className="text-slate-500">Referring Centre:</span>
                 <strong className="text-slate-900">{selectedReferral.fromFacility?.name}</strong>
@@ -356,7 +356,7 @@ export function ReferralTrackerPage() {
               <span className="text-[10px] font-mono font-bold uppercase text-slate-400">Verifiable Status Milestones</span>
               <div className="flex flex-col gap-2">
                 {selectedReferral.statusHistory?.map((step, idx) => (
-                  <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex flex-col text-xs">
+                  <div key={idx} className="p-3 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl flex flex-col text-xs">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-slate-900 uppercase font-mono">{step.status}</span>
                       <span className="text-[10px] text-slate-400 font-mono">
@@ -369,10 +369,10 @@ export function ReferralTrackerPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="flex justify-end gap-2 pt-2 border-t border-[#D3D4C0]/60">
               <button
                 onClick={() => setSelectedReferral(null)}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg cursor-pointer border-none"
+                className="px-5 py-2.5 bg-[#1f2229] hover:bg-teal-900 text-white font-bold text-xs rounded-xl cursor-pointer border-none shadow-xs"
               >
                 Close Audit Record
               </button>
