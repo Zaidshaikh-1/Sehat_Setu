@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-teal-brand: #0D9488;
+  --color-teal-dark: #0F766E;
+  --color-teal-light: #CCFBF1;
+  --color-warm-bg: #fafafc;
+  --color-card-bg: #ffffff;
+  --color-charcoal: #1e293b;
+  --color-sage: #99F6E4;
+
+  --font-serif: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-display: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html, body {
+    overscroll-behavior: none;
+    background-color: #fafafc;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: #1e293b;
+    background-color: #fafafc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Consistent border utility defaults */
+  * {
+    border-color: #e2e8f0;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Orbit animation sequence */
+  @keyframes orbit-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes orbit-spin-reverse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  .animate-orbit-inner {
+    animation: orbit-spin 50s linear infinite;
+  }
+  .animate-orbit-inner-reverse {
+    animation: orbit-spin-reverse 50s linear infinite;
+  }
+  .animate-orbit-outer {
+    animation: orbit-spin 80s linear infinite;
+  }
+  .animate-orbit-outer-reverse {
+    animation: orbit-spin-reverse 80s linear infinite;
+  }
+
+  .orbit-container:hover .animate-orbit-inner,
+  .orbit-container:hover .animate-orbit-inner-reverse,
+  .orbit-container:hover .animate-orbit-outer,
+  .orbit-container:hover .animate-orbit-outer-reverse {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes keepPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.keep-note {
+  animation: keepPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
