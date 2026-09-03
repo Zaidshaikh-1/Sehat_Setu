@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef, useCallback } from "react";
-=======
-import React, { useState, useEffect, useRef } from "react";
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { api } from "../utils/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -420,7 +416,6 @@ export function ConsultationPage() {
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
 
-<<<<<<< HEAD
   // Transcript state
   const [transcriptId, setTranscriptId] = useState(null);
   const [transcriptEntries, setTranscriptEntries] = useState([]);
@@ -428,9 +423,7 @@ export function ConsultationPage() {
   const [transcriptSummary, setTranscriptSummary] = useState("");
   const [showTranscriptPanel, setShowTranscriptPanel] = useState(true);
 
-=======
   // Clinical Note State
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
   const [chiefComplaint, setChiefComplaint] = useState("Severe pedal edema and persistent headache in 28th week gestation");
   const [clinicalObservations, setClinicalObservations] = useState(
     "Assisted teleconsultation conducted with ASHA Meera present with patient. Mild pallor noted, bilateral pitting edema. Fetal heart rate regular at 142 bpm."
@@ -585,17 +578,10 @@ export function ConsultationPage() {
 
       {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-<<<<<<< HEAD
         {/* Left: Video Feed + Transcription (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {/* Video Panel */}
           <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[360px] text-white">
-=======
-        {/* Left Column: Video Feed (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-4">
-          {/* Video Stream Card */}
-          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[340px] text-white">
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
             <div className="flex items-center justify-between">
               <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
@@ -648,16 +634,6 @@ export function ConsultationPage() {
             </div>
 
             {/* Call Action Bar */}
-<<<<<<< HEAD
-            <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-800">
-              <button
-                onClick={() => setIsAudioMuted(!isAudioMuted)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
-                  }`}
-              >
-                {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-=======
             <div className="flex items-center justify-between pt-3 border-t border-slate-800">
               <div className="flex items-center gap-2">
                 <button
@@ -669,7 +645,6 @@ export function ConsultationPage() {
                 >
                   {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 
                 <button
                   onClick={() => setIsVideoMuted(!isVideoMuted)}
@@ -684,13 +659,7 @@ export function ConsultationPage() {
 
               {/* End Call */}
               <button
-<<<<<<< HEAD
-                onClick={() => setIsVideoMuted(!isVideoMuted)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
-                  }`}
-=======
                 className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-2 cursor-pointer border-none transition-all shadow-xs bg-rose-600 hover:bg-rose-500 text-white"
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
               >
                 <PhoneOff className="w-3.5 h-3.5" />
                 <span>End Call</span>
@@ -708,7 +677,6 @@ export function ConsultationPage() {
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Live Transcription Panel */}
           {showTranscriptPanel && (
             <LiveTranscriptionPanel
@@ -723,9 +691,6 @@ export function ConsultationPage() {
               user={user}
             />
           )}
-=======
-
->>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
         </div>
 
         {/* Right Column: Clinical Note Form (7 cols) */}
