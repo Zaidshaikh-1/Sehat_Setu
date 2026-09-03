@@ -18,11 +18,6 @@ import {
   AlertCircle,
   FileText,
   ArrowRight,
-  Sparkles,
-  Radio,
-  Volume2,
-  Cpu,
-  Loader2,
 } from "lucide-react";
 
 export function ConsultationPage() {
@@ -63,16 +58,7 @@ export function ConsultationPage() {
   const [saving, setSaving] = useState(false);
   const [completedResult, setCompletedResult] = useState(null);
 
-  // Groq Transcription & AI Scribe State
-  const [isRecording, setIsRecording] = useState(false);
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [transcriptsList, setTranscriptsList] = useState([]);
-  const [isParsingAi, setIsParsingAi] = useState(false);
-  const [aiSuccessMsg, setAiSuccessMsg] = useState("");
 
-  const mediaRecorderRef = useRef(null);
-  const audioStreamRef = useRef(null);
-  const timerRef = useRef(null);
 
   useEffect(() => {
     async function loadFacilities() {
@@ -91,142 +77,11 @@ export function ConsultationPage() {
     }
     loadFacilities();
 
-    return () => {
-      stopRecording();
-    };
+    return () => {};
   }, []);
 
   const currentPatient = patients?.find((p) => p._id === selectedPatientId) || activePatient || patients?.[0];
 
-  // Start Real-time Mic Recording with 5-second chunk dispatcher
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioStreamRef.current = stream;
-
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-      mediaRecorderRef.current = mediaRecorder;
-      let chunks = [];
-
-      mediaRecorder.ondataavailable = async (e) => {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-          const audioBlob = new Blob(chunks, { type: "audio/webm" });
-          chunks = [];
-
-          // Dispatch chunk to Groq Whisper
-          if (audioBlob.size > 1000) {
-            sendAudioChunkToGroq(audioBlob);
-          }
-        }
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-
-      // Trigger data chunk every 5 seconds
-      timerRef.current = setInterval(() => {
-        if (mediaRecorder.state === "recording") {
-          mediaRecorder.requestData();
-        }
-      }, 5000);
-    } catch (err) {
-      console.error("Microphone access error:", err);
-      alert("Microphone permission required for Groq AI transcription: " + err.message);
-    }
-  };
-
-  const stopRecording = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
-    }
-    if (audioStreamRef.current) {
-      audioStreamRef.current.getTracks().forEach((track) => track.stop());
-      audioStreamRef.current = null;
-    }
-    setIsRecording(false);
-  };
-
-  const sendAudioChunkToGroq = async (blob) => {
-    setIsTranscribing(true);
-    try {
-      const formData = new FormData();
-      formData.append("audio", blob, "chunk.webm");
-
-      const res = await api.post("/transcription/chunk", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const text = res.data?.data?.text;
-      if (text && text.trim().length > 0) {
-        setTranscriptsList((prev) => [
-          ...prev,
-          {
-            speaker: mode === "video" ? "Doctor / ASHA" : "Speaker",
-            text: text.trim(),
-            time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
-          },
-        ]);
-      }
-    } catch (e) {
-      console.error("Chunk transcription error:", e);
-    } finally {
-      setIsTranscribing(false);
-    }
-  };
-
-  // Full AI Clinical Note Synthesis via Groq LLaMA 3.3 70B
-  const handleAutoFillWithGroq = async () => {
-    const fullTranscriptText = transcriptsList.map((t) => `${t.speaker} [${t.time}]: ${t.text}`).join("\n");
-
-    if (!fullTranscriptText.trim()) {
-      alert("Please record some dialogue or speak into the microphone first to generate a transcript.");
-      return;
-    }
-
-    setIsParsingAi(true);
-    try {
-      const res = await api.post("/transcription/parse", {
-        transcript: fullTranscriptText,
-        patientContext: {
-          name: currentPatient?.name,
-          age: currentPatient?.age,
-          gender: currentPatient?.gender,
-          village: currentPatient?.village,
-          conditions: currentPatient?.conditions,
-          vitals: currentPatient?.vitalsLatest,
-        },
-      });
-
-      const parsed = res.data?.data?.structuredNote;
-      if (parsed) {
-        if (parsed.chiefComplaint) setChiefComplaint(parsed.chiefComplaint);
-        if (parsed.clinicalObservations) setClinicalObservations(parsed.clinicalObservations);
-        if (parsed.diagnosis) setDiagnosis(parsed.diagnosis);
-        if (parsed.advice) setAdvice(parsed.advice);
-        if (parsed.prescription && Array.isArray(parsed.prescription) && parsed.prescription.length > 0) {
-          setPrescription(parsed.prescription);
-        }
-        if (parsed.referralNeeded !== undefined) {
-          setReferralNeeded(parsed.referralNeeded);
-          if (parsed.referralReason) {
-            setReferralDetails((prev) => ({ ...prev, reason: parsed.referralReason }));
-          }
-        }
-
-        setAiSuccessMsg("✨ AI synthesized clinical notes via Groq LLaMA 3.3 70B & Whisper Large v3!");
-        setTimeout(() => setAiSuccessMsg(""), 6000);
-      }
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to parse transcript with AI");
-    } finally {
-      setIsParsingAi(false);
-    }
-  };
 
   const handleAddMedicine = () => {
     setPrescription([
@@ -288,7 +143,7 @@ export function ConsultationPage() {
             Assisted Clinical Teleconsultation
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
-            Medical Officer teleconsultation with real-time Groq Whisper transcription & LLaMA automated note synthesis.
+            Medical Officer teleconsultation with ASHA-assisted rural patient video & voice connectivity.
           </p>
         </div>
 
@@ -313,22 +168,11 @@ export function ConsultationPage() {
         </div>
       </div>
 
-      {/* AI Success Notification */}
-      {aiSuccessMsg && (
-        <div className="p-4 bg-teal-50 border border-teal-300 text-teal-900 rounded-2xl flex items-center justify-between gap-2 text-xs font-bold animate-fadeIn shadow-2xs">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-            <span>{aiSuccessMsg}</span>
-          </div>
-          <span className="px-2 py-0.5 bg-teal-800 text-white rounded text-[10px] font-mono uppercase font-bold">
-            Groq LLaMA 3.3 70B
-          </span>
-        </div>
-      )}
+
 
       {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Video Feed & Real-time AI Transcription (5 cols) */}
+        {/* Left Column: Video Feed (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {/* Video Stream Card */}
           <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[340px] text-white">
@@ -407,91 +251,17 @@ export function ConsultationPage() {
                 </button>
               </div>
 
-              {/* Transcription Mic Toggle */}
+              {/* End Call */}
               <button
-                onClick={isRecording ? stopRecording : startRecording}
-                className={`px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-2 cursor-pointer border-none transition-all shadow-xs ${
-                  isRecording
-                    ? "bg-rose-600 text-white animate-pulse"
-                    : "bg-teal-700 hover:bg-teal-600 text-white"
-                }`}
+                className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-2 cursor-pointer border-none transition-all shadow-xs bg-rose-600 hover:bg-rose-500 text-white"
               >
-                <Radio className="w-3.5 h-3.5" />
-                <span>{isRecording ? "Stop AI Mic" : "Start AI Mic"}</span>
+                <PhoneOff className="w-3.5 h-3.5" />
+                <span>End Call</span>
               </button>
             </div>
           </div>
 
-          {/* Groq Live Transcription Panel */}
-          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-5 text-white flex flex-col gap-3 shadow-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-teal-400" />
-                <span className="font-serif font-bold text-sm text-white">Live Groq AI Captions</span>
-              </div>
 
-              <div className="flex items-center gap-2">
-                {isTranscribing && (
-                  <span className="text-[10px] font-mono text-teal-400 animate-pulse flex items-center gap-1">
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    Transcribing...
-                  </span>
-                )}
-                <span className="px-2 py-0.5 bg-slate-800 text-slate-400 rounded text-[9px] font-mono">
-                  Whisper v3
-                </span>
-              </div>
-            </div>
-
-            {/* Captions Stream Area */}
-            <div className="max-h-[160px] min-h-[100px] overflow-y-auto flex flex-col gap-2 p-2 bg-slate-900/80 rounded-2xl border border-slate-800 text-xs font-sans no-scrollbar">
-              {transcriptsList.length === 0 ? (
-                <div className="my-auto py-4 text-center text-slate-500 font-mono text-[11px]">
-                  {isRecording ? (
-                    <div className="flex flex-col items-center gap-1 text-teal-400">
-                      <div className="flex gap-1 items-center h-4">
-                        <div className="w-1 h-3 bg-teal-400 rounded-full animate-pulse" />
-                        <div className="w-1 h-4 bg-teal-400 rounded-full animate-pulse delay-75" />
-                        <div className="w-1 h-2 bg-teal-400 rounded-full animate-pulse delay-150" />
-                      </div>
-                      <span>Listening... Speak into the microphone.</span>
-                    </div>
-                  ) : (
-                    "Click 'Start AI Mic' above to capture live speech & generate real-time captions."
-                  )}
-                </div>
-              ) : (
-                transcriptsList.map((t, idx) => (
-                  <div key={idx} className="p-2 bg-slate-800/90 rounded-xl flex flex-col gap-0.5">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-teal-400">
-                      <span>{t.speaker}</span>
-                      <span className="text-slate-500">{t.time}</span>
-                    </div>
-                    <p className="text-slate-200 text-xs leading-relaxed">{t.text}</p>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Auto-fill Action Button */}
-            <button
-              onClick={handleAutoFillWithGroq}
-              disabled={isParsingAi || transcriptsList.length === 0}
-              className="w-full py-2.5 bg-gradient-to-r from-teal-800 to-teal-900 hover:from-teal-700 hover:to-teal-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer border border-teal-700 shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isParsingAi ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-300" />
-                  <span>Synthesizing with Groq LLaMA 3.3 70B...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Auto-Fill Clinical Notes from AI</span>
-                </>
-              )}
-            </button>
-          </div>
         </div>
 
         {/* Right Column: Clinical Note Form (7 cols) */}
