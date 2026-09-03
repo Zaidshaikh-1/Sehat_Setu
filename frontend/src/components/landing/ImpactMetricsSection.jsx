@@ -30,13 +30,13 @@ export function ImpactMetricsSection() {
   ];
 
   return (
-    <section className="py-16 bg-white border-b border-slate-200 text-slate-800 font-sans">
+    <section className="py-20 bg-[#fafafc] text-slate-800 font-sans">
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
         <div className="text-center max-w-2xl mb-12">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
             Systemic Healthcare Impact
           </span>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-sans font-black text-slate-900 tracking-tight">
             Measurable Outcomes for Rural Communities
           </h2>
         </div>
@@ -47,18 +47,18 @@ export function ImpactMetricsSection() {
             return (
               <div
                 key={idx}
-                className="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col justify-between gap-4"
+                className="bg-white rounded-3xl p-7 shadow-xs flex flex-col justify-between gap-5"
               >
-                <div className="w-9 h-9 rounded-xl bg-teal-50 border border-teal-200 text-teal-800 flex items-center justify-center">
-                  <Icon className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center">
+                  <Icon className="w-4.5 h-4.5" />
                 </div>
 
                 <div>
-                  <span className="text-3xl font-extrabold text-slate-900 font-sans tracking-tight block">
+                  <span className="text-3xl sm:text-4xl font-black text-slate-900 font-sans tracking-tight block">
                     {m.value}
                   </span>
-                  <h4 className="text-xs font-bold text-slate-800 mt-1">{m.label}</h4>
-                  <p className="text-[11px] text-slate-500 mt-1 leading-snug">{m.sub}</p>
+                  <h4 className="text-xs font-bold text-slate-800 mt-1.5">{m.label}</h4>
+                  <p className="text-[11.5px] text-slate-500 mt-1 leading-snug">{m.sub}</p>
                 </div>
               </div>
             );

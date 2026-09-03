@@ -10,6 +10,7 @@ import { AboutPage } from "./pages/AboutPage.jsx";
 import { PrivacyPage } from "./pages/PrivacyPage.jsx";
 import { TermsPage } from "./pages/TermsPage.jsx";
 import { JoinCallPage } from "./pages/JoinCallPage.jsx";
+import { ContactAshaPage } from "./pages/ContactAshaPage.jsx";
 
 // Protected Console Pages
 import { PatientListPage } from "./pages/PatientListPage.jsx";
@@ -33,6 +34,7 @@ export function App() {
         <Routes>
           {/* Public Landing & Legal Pages */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/contact-asha" element={<ContactAshaPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

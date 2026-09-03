@@ -9,11 +9,11 @@
   --color-teal-light: #CCFBF1;
   --color-brown: #8B5E3C;
   --color-brown-dark: #6e482d;
-  --color-warm-white: #F3E4C9;
-  --color-warm-white-dark: #D3D4C0;
-  --color-warm-bg: #FAF7F2;
+  --color-warm-white: #fafafc;
+  --color-warm-white-dark: #e2e8f0;
+  --color-warm-bg: #fafafc;
   --color-charcoal: #1f2229;
-  --color-sage: #D3D4C0;
+  --color-sage: #e2e8f0;
 
   --font-serif: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -23,19 +23,17 @@
 
 .heidi-card {
   background-color: #ffffff;
-  border: 1px solid #D3D4C0;
   border-radius: 1.25rem;
 }
 
 .heidi-pill {
   background-color: #ffffff;
-  border: 1px solid #D3D4C0;
   border-radius: 9999px;
   color: #0A2947;
 }
 
 .heidi-bg {
-  background-color: #FAF7F2;
+  background-color: #fafafc;
 }
 
 @layer base {
@@ -45,13 +43,13 @@
 
   html, body {
     overscroll-behavior: none;
-    background-color: #FAF7F2;
+    background-color: #fafafc;
   }
 
   body {
     font-family: var(--font-sans);
     color: #1f2229;
-    background-color: #FAF7F2;
+    background-color: #fafafc;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

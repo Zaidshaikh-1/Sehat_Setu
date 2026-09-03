@@ -1,7 +1,7 @@
 import React from "react";
-import { Activity, Stethoscope, Share2, Award, ArrowRight } from "lucide-react";
+import { Activity, Stethoscope, Share2, Award } from "lucide-react";
 
-export function WorkflowTimeline({ onExploreAsha, onOpenTriage, onOpenConsole }) {
+export function WorkflowTimeline() {
   const steps = [
     {
       num: "01",
@@ -30,16 +30,16 @@ export function WorkflowTimeline({ onExploreAsha, onOpenTriage, onOpenConsole })
   ];
 
   return (
-    <section id="workflow" className="py-16 bg-slate-50 border-b border-slate-200 text-slate-800 font-sans">
+    <section id="workflow" className="py-20 bg-[#fafafc] text-slate-800 font-sans">
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
         <div className="text-center max-w-2xl mb-12">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
             Operational Blueprint
           </span>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-sans font-black text-slate-900 tracking-tight">
             How Setu Completes the Care Loop
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-2">
+          <p className="text-xs sm:text-sm text-slate-600 mt-2">
             Eliminating referral leakage by turning verbal doctor instructions into an auditable digital trail.
           </p>
         </div>
@@ -50,12 +50,12 @@ export function WorkflowTimeline({ onExploreAsha, onOpenTriage, onOpenConsole })
             return (
               <div
                 key={idx}
-                className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-4"
+                className="bg-white rounded-3xl p-6 shadow-xs flex flex-col justify-between gap-5"
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-teal-700">{s.num}</span>
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-200 text-teal-800 flex items-center justify-center">
+                    <span className="text-xs font-mono font-bold text-slate-400">{s.num}</span>
+                    <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center">
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>

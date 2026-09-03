@@ -7,7 +7,6 @@ import {
   FlaskConical,
   ShieldAlert,
   Activity,
-  HeartPulse,
   Award,
 } from "lucide-react";
 
@@ -30,15 +29,15 @@ export function OrbitShowcase({ onNodeClick }) {
   const CurrentIcon = currentNode.icon;
 
   return (
-    <section id="orbit" className="py-20 bg-[#FAF7F2] border-b border-[#D3D4C0] text-slate-800 font-sans relative overflow-hidden">
+    <section id="orbit" className="py-20 bg-[#fafafc] text-slate-800 font-sans relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center text-center">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
             Systemic Interoperability
           </span>
-          <h2 className="text-4xl sm:text-5xl font-serif font-bold text-[#1f2229] tracking-tight">
-            The Rural Care Ecosystem, <span className="italic font-normal text-teal-800">Synchronized.</span>
+          <h2 className="text-3xl sm:text-5xl font-sans font-black text-slate-900 tracking-tight">
+            The Rural Care Ecosystem, Synchronized.
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-2">
             Click any node in the care orbit to inspect how Setu maintains unbroken continuity between community and hospital.
@@ -52,14 +51,14 @@ export function OrbitShowcase({ onNodeClick }) {
             {/* SVG Orbit Tracks */}
             <div className="relative w-80 h-80 sm:w-96 sm:h-96 flex items-center justify-center orbit-container">
               {/* Outer Ring */}
-              <div className="absolute inset-0 rounded-full border border-dashed border-[#D3D4C0] animate-orbit-outer" />
+              <div className="absolute inset-0 rounded-full border border-dashed border-slate-200 animate-orbit-outer" />
               {/* Inner Ring */}
-              <div className="absolute inset-8 sm:inset-10 rounded-full border border-[#D3D4C0] animate-orbit-inner-reverse" />
+              <div className="absolute inset-8 sm:inset-10 rounded-full border border-slate-200 animate-orbit-inner-reverse" />
 
               {/* Central Core Hub */}
-              <div className="w-24 h-24 rounded-full bg-white border-2 border-teal-700 shadow-lg flex flex-col items-center justify-center z-20">
-                <span className="font-display font-black text-sm text-[#1f2229] tracking-tighter">SETU</span>
-                <span className="text-[8.5px] font-mono text-teal-700 font-bold uppercase">Care Bridge</span>
+              <div className="w-24 h-24 rounded-full bg-white shadow-lg flex flex-col items-center justify-center z-20">
+                <span className="font-sans font-black text-base text-slate-900 tracking-tight">SETU</span>
+                <span className="text-[8.5px] font-mono text-slate-500 font-bold uppercase">Care Bridge</span>
               </div>
 
               {/* Orbiting Satellite Node Buttons */}
@@ -76,14 +75,14 @@ export function OrbitShowcase({ onNodeClick }) {
                     key={node.id}
                     onClick={() => setActiveNode(node.id)}
                     style={{ transform: `translate(${x}px, ${y}px)` }}
-                    className={`absolute w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer transition-all shadow-xs z-30 ${
+                    className={`absolute w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer transition-all shadow-xs z-30 border-none ${
                       isSelected
-                        ? "bg-[#1f2229] text-white scale-110 ring-2 ring-teal-600"
-                        : "bg-white text-slate-700 hover:bg-[#F3E4C9] border border-[#D3D4C0]"
+                        ? "bg-slate-900 text-white scale-110 shadow-md"
+                        : "bg-white text-slate-700 hover:bg-slate-50"
                     }`}
                     title={node.label}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4.5 h-4.5" />
                   </button>
                 );
               })}
@@ -91,19 +90,19 @@ export function OrbitShowcase({ onNodeClick }) {
           </div>
 
           {/* Right: Selected Node Card (5 cols) */}
-          <div className="lg:col-span-5 bg-white border border-[#D3D4C0] rounded-3xl p-7 shadow-xs flex flex-col justify-between gap-5 text-left animate-fadeIn">
-            <div className="flex flex-col gap-3">
+          <div className="lg:col-span-5 bg-white rounded-3xl p-8 shadow-sm flex flex-col justify-between gap-6 text-left animate-fadeIn">
+            <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono uppercase font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-200">
+                <span className="text-[10px] font-mono uppercase font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-md">
                   {currentNode.tier}
                 </span>
-                <div className="w-9 h-9 rounded-xl bg-[#FAF7F2] border border-[#D3D4C0] text-teal-800 flex items-center justify-center">
-                  <CurrentIcon className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center">
+                  <CurrentIcon className="w-4.5 h-4.5" />
                 </div>
               </div>
 
               <div>
-                <h3 className="text-2xl font-serif font-bold text-[#1f2229]">
+                <h3 className="text-2xl font-sans font-bold text-slate-900">
                   {currentNode.label}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-sans">
@@ -112,9 +111,9 @@ export function OrbitShowcase({ onNodeClick }) {
               </div>
             </div>
 
-            <div className="p-3.5 bg-[#FAF7F2] rounded-xl border border-[#D3D4C0] flex items-center justify-between text-xs font-mono text-slate-700">
+            <div className="p-3.5 bg-slate-50 rounded-xl flex items-center justify-between text-xs font-mono text-slate-700">
               <span>National ABDM Interoperability</span>
-              <strong className="text-teal-800">READY</strong>
+              <strong className="text-slate-900">READY</strong>
             </div>
           </div>
         </div>

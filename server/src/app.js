@@ -50,6 +50,7 @@ import bloodbankRoutes from "./routes/bloodbank.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import transcriptRoutes from "./routes/transcript.routes.js";
 import chatbotRoutes from "./routes/chatbot.routes.js";
+import symptomAnalysisRoutes from "./routes/symptomAnalysis.routes.js";
 
 // Mount routes
 app.use("/api/auth", authRoutes);
@@ -65,6 +66,7 @@ app.use("/api/emergency", emergencyRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/transcripts", transcriptRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/symptom-analysis", symptomAnalysisRoutes);
 
 app.use("/api/bloodbank", bloodbankRoutes);
 app.use("/health", healthRoutes);

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { api } from "../utils/api.js";
+import { translations } from "../utils/translations.js";
 
 const AuthContext = createContext(null);
 
@@ -13,6 +14,18 @@ export function AuthProvider({ children }) {
     setLanguage(lang);
     localStorage.setItem("setu_lang", lang);
   };
+
+  const t = useCallback(
+    (key, replacements = {}) => {
+      const langDict = translations[language] || translations.en;
+      let text = langDict[key] || translations.en[key] || key;
+      Object.keys(replacements).forEach((k) => {
+        text = text.replace(new RegExp(`{${k}}`, "g"), replacements[k]);
+      });
+      return text;
+    },
+    [language]
+  );
 
   useEffect(() => {
     async function checkAuth() {
@@ -77,6 +90,7 @@ export function AuthProvider({ children }) {
         loading,
         language,
         setLanguage: changeLanguage,
+        t,
         login,
         quickDemoLogin,
         logout,
@@ -92,3 +106,9 @@ export function useAuth() {
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
+
+export function useTranslation() {
+  const { t, language, setLanguage } = useAuth();
+  return { t, language, setLanguage };
+}
+

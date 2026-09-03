@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext.jsx";
-import { ArrowRight, ShieldCheck, Users, Stethoscope, Building } from "lucide-react";
+import { useAuth, useTranslation } from "../../context/AuthContext.jsx";
+import { ArrowRight, Users, Stethoscope, Building2, Sparkles } from "lucide-react";
 
-export function HeroSection({ onExploreAsha, onOpenTriage, onOpenConsole }) {
+export function HeroSection({ onNavigate }) {
   const navigate = useNavigate();
   const { quickDemoLogin } = useAuth();
+  const { t } = useTranslation();
 
   const handleLaunchRole = async (role) => {
     await quickDemoLogin(role);
@@ -15,105 +16,120 @@ export function HeroSection({ onExploreAsha, onOpenTriage, onOpenConsole }) {
   };
 
   return (
-    <header className="relative w-full flex flex-col items-center justify-center text-center px-6 gap-8 z-10 max-w-5xl mx-auto pt-16 pb-20">
-      {/* Top Tag */}
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#D3D4C0] text-[#0A2947] text-xs font-mono font-medium shadow-2xs">
-        <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse" />
-        <span>SIH 2026 Problem Statement · PS Ref: SIH21633</span>
+    <header className="relative w-full flex flex-col items-center justify-center text-center px-4 sm:px-6 gap-6 sm:gap-8 z-10 max-w-5xl mx-auto pt-12 sm:pt-20 pb-16">
+      {/* Top Tag Pill */}
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs text-slate-800 text-xs font-mono font-medium">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span>{t("heroBadge")}</span>
       </div>
 
-      {/* Signature Clinicians / Scribologist Serif Headline */}
-      <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif text-[#1f2229] leading-[1.05] tracking-tight text-center max-w-4xl">
-        One patient. One ABHA record. <br className="hidden sm:inline" />
-        <span className="italic font-normal text-teal-800">Every rural facility connected.</span>
+      {/* Signature Bold Sans Headline */}
+      <h1 className="text-4xl sm:text-6xl md:text-7xl font-sans font-black text-slate-900 leading-[1.08] tracking-tight text-center max-w-4xl">
+        {t("heroHeadline")}
       </h1>
 
-      <p className="text-sm sm:text-base text-[#1f2229]/70 max-w-2xl leading-relaxed font-sans -mt-2">
-        Setu is the integrated care bridge connecting frontline ASHA field workers, Primary Health Centres (PHCs), and District Hospitals with offline triage, assisted teleconsultation, and closed-loop referral tracking.
+      <p className="text-sm sm:text-base text-slate-600 max-w-2xl leading-relaxed font-sans -mt-1">
+        {t("heroSubhead")}
       </p>
 
-      {/* Main Action Button (Clinicians Style) */}
-      <div className="flex flex-col sm:flex-row items-center gap-3">
+      {/* Main Action Buttons (Clinicians Style) */}
+      <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
         <button
-          onClick={() => navigate("/login")}
-          className="px-8 py-3.5 bg-[#1f2229] hover:bg-[#0A2947] text-white font-semibold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer border-none"
+          onClick={() => navigate("/contact-asha")}
+          className="w-full sm:w-auto px-7 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
         >
-          <span>Launch Operational Console</span>
-          <span className="text-xs text-teal-400">✦</span>
+          <Stethoscope className="w-4 h-4 text-teal-400" />
+          <span>{t("heroCtaContact")}</span>
+          <span className="text-xs text-slate-400">✦</span>
         </button>
 
-        <a
-          href="#orbit"
-          className="px-6 py-3.5 bg-white hover:bg-[#F3E4C9]/60 text-[#1f2229] font-semibold text-sm rounded-xl border border-[#D3D4C0] transition-all no-underline shadow-2xs"
+        <button
+          onClick={() => navigate("/login")}
+          className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border-none"
         >
-          Explore Care Ecosystem
-        </a>
+          <span>{t("heroCtaConsole")}</span>
+        </button>
       </div>
 
       {/* 3 Quick Role Switch Cards */}
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full max-w-4xl text-left">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl text-left">
+        {/* Frontline ASHA */}
         <div
           onClick={() => handleLaunchRole("asha")}
-          className="bg-white border border-[#D3D4C0] hover:border-teal-700 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
+          className="bg-white rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FAF7F2] border border-[#D3D4C0] text-teal-800 flex items-center justify-center">
-              <Users className="w-4 h-4" />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+              <Users className="w-4.5 h-4.5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase font-bold text-teal-700 block">Role: Frontline ASHA</span>
-              <h4 className="text-xs font-bold text-slate-900 group-hover:text-teal-800">Meera Jadhav</h4>
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">
+                {t("roleAshaTitle")}
+              </span>
+              <h4 className="text-xs font-bold text-slate-900 group-hover:text-slate-950">
+                {t("roleAshaName")}
+              </h4>
             </div>
           </div>
-          <p className="text-[11px] text-slate-600 leading-snug">
-            Run offline field triage, track high-risk ANC pregnancies, and log home visits.
+          <p className="text-[11.5px] text-slate-600 leading-snug">
+            {t("roleAshaDesc")}
           </p>
-          <div className="pt-2 border-t border-[#D3D4C0]/50 flex items-center justify-between text-[11px] font-bold text-teal-800">
-            <span>Launch ASHA Workspace</span>
+          <div className="pt-2 flex items-center justify-between text-[11px] font-bold text-slate-900">
+            <span>{t("roleAshaCta")}</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
 
+        {/* PHC Doctor */}
         <div
           onClick={() => handleLaunchRole("doctor")}
-          className="bg-white border border-[#D3D4C0] hover:border-teal-700 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
+          className="bg-white rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FAF7F2] border border-[#D3D4C0] text-teal-800 flex items-center justify-center">
-              <Stethoscope className="w-4 h-4" />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+              <Stethoscope className="w-4.5 h-4.5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase font-bold text-teal-700 block">Role: PHC Doctor</span>
-              <h4 className="text-xs font-bold text-slate-900 group-hover:text-teal-800">Dr. Prakash Sharma</h4>
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">
+                {t("roleDocTitle")}
+              </span>
+              <h4 className="text-xs font-bold text-slate-900 group-hover:text-slate-950">
+                {t("roleDocName")}
+              </h4>
             </div>
           </div>
-          <p className="text-[11px] text-slate-600 leading-snug">
-            Conduct assisted teleconsultations, author e-prescriptions, and issue specialist referrals.
+          <p className="text-[11.5px] text-slate-600 leading-snug">
+            {t("roleDocDesc")}
           </p>
-          <div className="pt-2 border-t border-[#D3D4C0]/50 flex items-center justify-between text-[11px] font-bold text-teal-800">
-            <span>Launch Doctor Console</span>
+          <div className="pt-2 flex items-center justify-between text-[11px] font-bold text-slate-900">
+            <span>{t("roleDocCta")}</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
 
+        {/* District Admin */}
         <div
           onClick={() => handleLaunchRole("admin")}
-          className="bg-white border border-[#D3D4C0] hover:border-teal-700 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
+          className="bg-white rounded-2xl p-5 shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between gap-3 group"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#FAF7F2] border border-[#D3D4C0] text-teal-800 flex items-center justify-center">
-              <Building className="w-4 h-4" />
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+              <Building2 className="w-4.5 h-4.5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono uppercase font-bold text-teal-700 block">Role: District Admin</span>
-              <h4 className="text-xs font-bold text-slate-900 group-hover:text-teal-800">Dr. Sunita Rao</h4>
+              <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">
+                {t("roleAdminTitle")}
+              </span>
+              <h4 className="text-xs font-bold text-slate-900 group-hover:text-slate-950">
+                {t("roleAdminName")}
+              </h4>
             </div>
           </div>
-          <p className="text-[11px] text-slate-600 leading-snug">
-            Track referral drop-offs, monitor pharmacy stock-outs, and review hospital capacity.
+          <p className="text-[11.5px] text-slate-600 leading-snug">
+            {t("roleAdminDesc")}
           </p>
-          <div className="pt-2 border-t border-[#D3D4C0]/50 flex items-center justify-between text-[11px] font-bold text-teal-800">
-            <span>Launch Governance Board</span>
+          <div className="pt-2 flex items-center justify-between text-[11px] font-bold text-slate-900">
+            <span>{t("roleAdminCta")}</span>
             <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>

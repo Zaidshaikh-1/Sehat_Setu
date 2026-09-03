@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Activity, Stethoscope, Share2, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Activity, Stethoscope, Share2, CheckCircle2 } from "lucide-react";
 
-export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) {
+export function ProductShowcase() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
 
   const slides = [
@@ -17,7 +19,7 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
         "Multilingual text-to-speech audio feedback in Hindi and Marathi",
       ],
       icon: Activity,
-      action: onTryTriage,
+      action: () => navigate("/triage"),
       actionLabel: "Launch Clinical Triage",
       previewText: "BP: 148/94 mmHg · Severe Pedal Edema · Flag: High-Risk Gestational Hypertension",
     },
@@ -33,7 +35,7 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
         "Standardized HL7 FHIR JSON payloads ready for national ABDM sync",
       ],
       icon: Stethoscope,
-      action: onTryTimeline,
+      action: () => navigate("/patients"),
       actionLabel: "View Longitudinal Record",
       previewText: "ABHA: 91-8274-1928-4401 · Sunita Devi · Gestational Age: 28w",
     },
@@ -49,7 +51,7 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
         "Auditable milestone logs with automated ASHA follow-up notification",
       ],
       icon: Share2,
-      action: onTryReferrals,
+      action: () => navigate("/referrals"),
       actionLabel: "Open Referral Kanban",
       previewText: "Referral Code: REF-2026-0819 · Status: Traveling -> Pune District Hospital",
     },
@@ -59,27 +61,27 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
   const Icon = current.icon;
 
   return (
-    <section id="product" className="py-20 bg-[#FAF7F2] border-b border-[#D3D4C0] text-slate-800 font-sans">
+    <section id="product" className="py-20 bg-[#fafafc] text-slate-800 font-sans">
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
         {/* Header */}
         <div className="text-center max-w-2xl mb-12">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
             Care Architecture
           </span>
-          <h2 className="text-4xl sm:text-5xl font-serif font-bold text-[#1f2229] tracking-tight">
-            How Setu Powers the <span className="italic font-normal text-teal-800">Public Health Rail</span>
+          <h2 className="text-3xl sm:text-5xl font-sans font-black text-slate-900 tracking-tight">
+            How Setu Powers the Public Health Rail
           </h2>
         </div>
 
         {/* Tab Pills */}
-        <div className="flex bg-white p-1 rounded-2xl border border-[#D3D4C0] gap-1 mb-10 max-w-lg w-full shadow-2xs">
+        <div className="flex bg-white p-1 rounded-2xl gap-1 mb-10 max-w-md w-full shadow-xs">
           {slides.map((s, idx) => (
             <button
               key={s.id}
               onClick={() => setActiveTab(idx)}
               className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer border-none ${
                 activeTab === idx
-                  ? "bg-[#1f2229] text-white shadow-xs"
+                  ? "bg-slate-900 text-white shadow-xs"
                   : "bg-transparent text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -89,19 +91,19 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
         </div>
 
         {/* Slide Showcase Card */}
-        <div className="w-full bg-white border border-[#D3D4C0] rounded-3xl p-8 sm:p-10 shadow-xs text-left grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="w-full bg-white rounded-3xl p-8 sm:p-12 shadow-sm text-left grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Description (7 cols) */}
           <div className="lg:col-span-7 flex flex-col gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#FAF7F2] border border-[#D3D4C0] text-teal-800 flex items-center justify-center">
-                <Icon className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center">
+                <Icon className="w-4.5 h-4.5" />
               </div>
-              <span className="text-xs font-mono font-bold uppercase text-teal-800">
+              <span className="text-xs font-mono font-bold uppercase text-slate-500">
                 {current.tagline}
               </span>
             </div>
 
-            <h3 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight leading-snug">
+            <h3 className="text-2xl sm:text-3xl font-sans font-black text-slate-900 tracking-tight leading-snug">
               {current.headline}
             </h3>
 
@@ -112,7 +114,7 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
             <div className="flex flex-col gap-2 pt-2">
               {current.features.map((feat, i) => (
                 <div key={i} className="flex items-start gap-2.5 text-xs text-slate-700 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span>{feat}</span>
                 </div>
               ))}
@@ -121,31 +123,31 @@ export function ProductShowcase({ onTryTriage, onTryTimeline, onTryReferrals }) 
             <div className="pt-4">
               <button
                 onClick={current.action}
-                className="px-6 py-3 bg-[#1f2229] hover:bg-teal-800 text-white font-semibold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer border-none"
+                className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 cursor-pointer border-none"
               >
                 <span>{current.actionLabel}</span>
-                <span className="text-xs text-teal-400">✦</span>
+                <span className="text-xs text-slate-400">✦</span>
               </button>
             </div>
           </div>
 
           {/* Right Simulated Card (5 cols) */}
-          <div className="lg:col-span-5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-2xl p-6 flex flex-col justify-between min-h-[300px] shadow-2xs">
-            <div className="flex items-center justify-between pb-3 border-b border-[#D3D4C0]">
-              <span className="text-[10px] font-mono font-bold uppercase text-teal-800">
+          <div className="lg:col-span-5 bg-slate-50 rounded-2xl p-6 flex flex-col justify-between min-h-[300px]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <span className="text-[10px] font-mono font-bold uppercase text-slate-700">
                 HL7 FHIR R4 Schema
               </span>
               <span className="text-[10px] font-mono text-slate-400">ABDM Sync: Ready</span>
             </div>
 
             <div className="my-auto py-4 flex flex-col gap-3">
-              <div className="p-4 bg-white rounded-xl border border-[#D3D4C0] text-xs font-mono">
+              <div className="p-4 bg-white rounded-xl shadow-xs text-xs font-mono">
                 <span className="text-slate-400 text-[9.5px] block uppercase">Live Telemetry Snapshot</span>
                 <strong className="text-slate-900 block mt-1">{current.previewText}</strong>
               </div>
             </div>
 
-            <div className="text-[10px] font-mono text-slate-500 pt-2 border-t border-[#D3D4C0] flex items-center justify-between">
+            <div className="text-[10px] font-mono text-slate-500 pt-2 border-t border-slate-200 flex items-center justify-between">
               <span>Security: AES-256</span>
               <span>Network: 2G/3G Compatible</span>
             </div>
