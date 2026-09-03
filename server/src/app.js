@@ -30,8 +30,8 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // Route imports
@@ -46,6 +46,7 @@ import medicineRoutes from "./routes/medicine.routes.js";
 import followupRoutes from "./routes/followup.routes.js";
 import emergencyRoutes from "./routes/emergency.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import bloodbankRoutes from "./routes/bloodbank.routes.js";
 import healthRoutes from "./routes/health.routes.js";
 import transcriptRoutes from "./routes/transcript.routes.js";
 import chatbotRoutes from "./routes/chatbot.routes.js";
@@ -62,8 +63,12 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/followups", followupRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+<<<<<<< HEAD
 app.use("/api/transcripts", transcriptRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+=======
+app.use("/api/bloodbank", bloodbankRoutes);
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 app.use("/health", healthRoutes);
 
 // Global Error Handler

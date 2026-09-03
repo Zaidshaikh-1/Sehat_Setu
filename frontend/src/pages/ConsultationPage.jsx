@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef, useCallback } from "react";
+=======
+import React, { useState, useEffect, useRef } from "react";
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { api } from "../utils/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -416,6 +420,7 @@ export function ConsultationPage() {
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
 
+<<<<<<< HEAD
   // Transcript state
   const [transcriptId, setTranscriptId] = useState(null);
   const [transcriptEntries, setTranscriptEntries] = useState([]);
@@ -423,10 +428,17 @@ export function ConsultationPage() {
   const [transcriptSummary, setTranscriptSummary] = useState("");
   const [showTranscriptPanel, setShowTranscriptPanel] = useState(true);
 
+=======
+  // Clinical Note State
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
   const [chiefComplaint, setChiefComplaint] = useState("Severe pedal edema and persistent headache in 28th week gestation");
-  const [clinicalObservations, setClinicalObservations] = useState("Assisted teleconsultation conducted with ASHA Meera present with patient. Mild pallor noted, bilateral pitting edema. Fetal heart rate regular at 142 bpm.");
+  const [clinicalObservations, setClinicalObservations] = useState(
+    "Assisted teleconsultation conducted with ASHA Meera present with patient. Mild pallor noted, bilateral pitting edema. Fetal heart rate regular at 142 bpm."
+  );
   const [diagnosis, setDiagnosis] = useState("High-Risk Gestational Hypertension with Nutritional Anemia");
-  const [advice, setAdvice] = useState("Strict bed rest on left lateral position, reduce salt intake, continue IFA tablets, emergency hospital visit if bleeding occurs.");
+  const [advice, setAdvice] = useState(
+    "Strict bed rest on left lateral position, reduce salt intake, continue IFA tablets, emergency hospital visit if bleeding occurs."
+  );
   const [prescription, setPrescription] = useState([
     { medicine: "Tab. Ferrous Ascorbate 100mg + Folic Acid 1.5mg", dosage: "1 tablet", frequency: "Once daily (1-0-0)", duration: "30 days", instructions: "After meals" },
     { medicine: "Tab. Calcium Carbonate 500mg with Vit D3", dosage: "1 tablet", frequency: "Once daily (0-1-0)", duration: "30 days", instructions: "After lunch" },
@@ -444,6 +456,8 @@ export function ConsultationPage() {
   const [saving, setSaving] = useState(false);
   const [completedResult, setCompletedResult] = useState(null);
 
+
+
   useEffect(() => {
     async function loadFacilities() {
       try {
@@ -460,9 +474,12 @@ export function ConsultationPage() {
       }
     }
     loadFacilities();
+
+    return () => {};
   }, []);
 
   const currentPatient = patients?.find((p) => p._id === selectedPatientId) || activePatient || patients?.[0];
+
 
   const handleAddMedicine = () => {
     setPrescription([
@@ -533,13 +550,13 @@ export function ConsultationPage() {
       <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
-            Module 3.3 · Clinical Telemedicine
+            Module 3.3 · Clinical Telemedicine & AI Scribe
           </span>
           <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             Assisted Clinical Teleconsultation
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
-            Medical Officer teleconsultation with frontline worker relaying live vitals.
+            Medical Officer teleconsultation with ASHA-assisted rural patient video & voice connectivity.
           </p>
         </div>
 
@@ -557,34 +574,48 @@ export function ConsultationPage() {
           >
             {patients?.map((p) => (
               <option key={p._id} value={p._id}>
-                {p.name} ({p.village} · {p.age}y)
+                {p.name} ({p.bloodGroup || "O+"} · {p.village} · {p.age}y)
               </option>
             ))}
           </select>
         </div>
       </div>
 
+
+
       {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<<<<<<< HEAD
         {/* Left: Video Feed + Transcription (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {/* Video Panel */}
           <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[360px] text-white">
+=======
+        {/* Left Column: Video Feed (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Video Stream Card */}
+          <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[340px] text-white">
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
             <div className="flex items-center justify-between">
-              <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold">
-                WebRTC Stream Active
+              <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                <span>WebRTC Stream Active</span>
               </span>
 
               <div className="flex bg-slate-800 rounded-xl p-0.5 text-[10px] font-mono">
                 <button
                   onClick={() => setMode("video")}
-                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
+                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${
+                    mode === "video" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
+                  }`}
                 >
                   Video
                 </button>
                 <button
                   onClick={() => setMode("voice")}
-                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"}`}
+                  className={`px-2.5 py-1 rounded-lg cursor-pointer border-none ${
+                    mode === "voice" ? "bg-teal-700 text-white font-bold" : "bg-transparent text-slate-400"
+                  }`}
                 >
                   Voice
                 </button>
@@ -605,12 +636,19 @@ export function ConsultationPage() {
 
             {/* Vitals Strip */}
             <div className="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex items-center justify-between text-[11px] font-mono text-slate-300">
-              <div>BP: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.systolicBP ? `${currentPatient.vitalsLatest.systolicBP}/${currentPatient.vitalsLatest.diastolicBP}` : "134/86"}</strong></div>
-              <div>SpO2: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.spO2 || 98}%</strong></div>
-              <div>Hb: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.hemoglobin || 8.8} g/dL</strong></div>
+              <div>
+                BP: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.systolicBP ? `${currentPatient.vitalsLatest.systolicBP}/${currentPatient.vitalsLatest.diastolicBP}` : "134/86"}</strong>
+              </div>
+              <div>
+                SpO2: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.spO2 || 98}%</strong>
+              </div>
+              <div>
+                Hb: <strong className="text-teal-300">{currentPatient?.vitalsLatest?.hemoglobin || 8.8} g/dL</strong>
+              </div>
             </div>
 
             {/* Call Action Bar */}
+<<<<<<< HEAD
             <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-800">
               <button
                 onClick={() => setIsAudioMuted(!isAudioMuted)}
@@ -619,13 +657,43 @@ export function ConsultationPage() {
               >
                 {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
+=======
+            <div className="flex items-center justify-between pt-3 border-t border-slate-800">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsAudioMuted(!isAudioMuted)}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
+                    isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
+                  title={isAudioMuted ? "Unmute Mic" : "Mute Mic"}
+                >
+                  {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                </button>
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
 
+                <button
+                  onClick={() => setIsVideoMuted(!isVideoMuted)}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
+                    isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
+                  title={isVideoMuted ? "Start Camera" : "Stop Camera"}
+                >
+                  {isVideoMuted ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* End Call */}
               <button
+<<<<<<< HEAD
                 onClick={() => setIsVideoMuted(!isVideoMuted)}
                 className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
                   }`}
+=======
+                className="px-3.5 py-1.5 rounded-xl font-bold font-mono text-xs flex items-center gap-2 cursor-pointer border-none transition-all shadow-xs bg-rose-600 hover:bg-rose-500 text-white"
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
               >
-                {isVideoMuted ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
+                <PhoneOff className="w-3.5 h-3.5" />
+                <span>End Call</span>
               </button>
 
               {/* Toggle Transcript Panel */}
@@ -640,6 +708,7 @@ export function ConsultationPage() {
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Live Transcription Panel */}
           {showTranscriptPanel && (
             <LiveTranscriptionPanel
@@ -654,9 +723,12 @@ export function ConsultationPage() {
               user={user}
             />
           )}
+=======
+
+>>>>>>> 07b23def06cbe883d4e41674971f7510ec9dacc1
         </div>
 
-        {/* Right: Clinical Note Form (7 cols) */}
+        {/* Right Column: Clinical Note Form (7 cols) */}
         <div className="lg:col-span-7 bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#D3D4C0]/60">
             <div>

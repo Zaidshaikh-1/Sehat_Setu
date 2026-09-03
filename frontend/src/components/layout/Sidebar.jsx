@@ -16,6 +16,7 @@ import {
   Search,
   LogOut,
   Building,
+  Droplet,
 } from "lucide-react";
 
 export function Sidebar({ patients = [], activePatientId, onSelectPatient, onNewTriage }) {
@@ -49,6 +50,7 @@ export function Sidebar({ patients = [], activePatientId, onSelectPatient, onNew
         { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { path: "/referrals", label: "Referrals", icon: Share2 },
         { path: "/patients", label: "Patients", icon: Users },
+        { path: "/blood-bank", label: "Blood", icon: Droplet },
         { path: "/medicine", label: "Pharmacy", icon: Pill },
         { path: "/diagnostics", label: "Diagnostics", icon: FlaskConical },
         { path: "/appointments", label: "OPD Load", icon: Calendar },
@@ -58,6 +60,7 @@ export function Sidebar({ patients = [], activePatientId, onSelectPatient, onNew
       return [
         { path: "/consultation", label: "Teleconsult", icon: Stethoscope },
         { path: "/patients", label: "Patients", icon: Users },
+        { path: "/blood-bank", label: "Blood", icon: Droplet },
         { path: "/referrals", label: "Referrals", icon: Share2 },
         { path: "/diagnostics", label: "Lab Orders", icon: FlaskConical },
         { path: "/appointments", label: "Tokens", icon: Calendar },
@@ -71,6 +74,7 @@ export function Sidebar({ patients = [], activePatientId, onSelectPatient, onNew
       { path: "/triage", label: "Triage", icon: Activity },
       { path: "/followup", label: "Worklist", icon: ClipboardList },
       { path: "/consultation", label: "Teleconsult", icon: Stethoscope },
+      { path: "/blood-bank", label: "Blood", icon: Droplet },
       { path: "/referrals", label: "Referrals", icon: Share2 },
       { path: "/medicine", label: "Drugs", icon: Pill },
       { path: "/emergency", label: "108 SOS", icon: ShieldAlert, emergency: true },
