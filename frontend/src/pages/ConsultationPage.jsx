@@ -514,12 +514,103 @@ function MedicineAutocompleteInput({ value, onChange, onSelectDrug }) {
   );
 }
 
+// ─── Incoming Teleconsultation Call Queue Database Mock ────────────
+const DEFAULT_INCOMING_QUEUE = [
+  {
+    token: "SETU-849102",
+    patientName: "Sunita Devi",
+    age: 28,
+    gender: "Female",
+    village: "Rampur Sub-Centre",
+    ashaName: "Meera Jadhav (ASHA)",
+    specialty: "Gynecologist/Obstetrician",
+    urgency: "HIGH",
+    urgencyColor: "bg-rose-50 text-rose-700 border-rose-200",
+    symptoms: "28th week gestation, severe pedal edema, frontal headache, blood pressure 134/86 mmHg",
+    aiTriage: "High-Risk Gestational Hypertension Screening Needed",
+    chiefComplaint: "Severe pedal edema and persistent headache in 28th week gestation",
+    diagnosis: "High-Risk Gestational Hypertension with Nutritional Anemia",
+    advice: "Strict bed rest in left lateral position, reduce sodium intake, continue IFA Red tablets, emergency hospital visit if bleeding occurs.",
+  },
+  {
+    token: "SETU-592810",
+    patientName: "Ramesh Patil",
+    age: 55,
+    gender: "Male",
+    village: "Khandala",
+    ashaName: "Meera Jadhav (ASHA)",
+    specialty: "General Physician",
+    urgency: "MODERATE",
+    urgencyColor: "bg-amber-50 text-amber-700 border-amber-200",
+    symptoms: "Dizziness, blurred vision, missed hypertension medications for 2 weeks, BP 158/98 mmHg",
+    aiTriage: "Hypertensive Titration & Fasting Blood Sugar Evaluation",
+    chiefComplaint: "Elevated BP (158/98) and missed drug refills with occipital headaches",
+    diagnosis: "Essential Hypertension Stage 2 with Poor Compliance",
+    advice: "Resume Tab. Telmisartan 40mg OD immediately. Maintain daily BP log with ASHA worker.",
+  },
+  {
+    token: "SETU-391820",
+    patientName: "Aarav Jadhav (Infant)",
+    age: 1,
+    gender: "Male",
+    village: "Rampur Sub-Centre",
+    ashaName: "Meera Jadhav (ASHA)",
+    specialty: "Pediatrician",
+    urgency: "MODERATE",
+    urgencyColor: "bg-amber-50 text-amber-700 border-amber-200",
+    symptoms: "High fever 101.5°F for 2 days, persistent wheezing, refusing breastmilk, mild dehydration",
+    aiTriage: "Acute Pediatric Bronchiolitis / Oral Rehydration Protocol",
+    chiefComplaint: "Acute wheezing, fever, decreased oral intake in 8-month-old infant",
+    diagnosis: "Acute Bronchiolitis with Mild Dehydration",
+    advice: "ORS frequent sips (15ml every 10 min), Paracetamol drops 100mg SOS for fever > 100°F, steam inhalation.",
+  },
+  {
+    token: "SETU-742911",
+    patientName: "Govind Thakur",
+    age: 42,
+    gender: "Male",
+    village: "Maval",
+    ashaName: "Meera Jadhav (ASHA)",
+    specialty: "Pulmonology / DOTS",
+    urgency: "HIGH",
+    urgencyColor: "bg-rose-50 text-rose-700 border-rose-200",
+    symptoms: "Productive cough > 3 weeks, evening chills, blood-tinged sputum, loss of 4kg body weight",
+    aiTriage: "Suspected Pulmonary TB (GeneXpert Molecular Fast-Track)",
+    chiefComplaint: "Chronic productive cough > 3 weeks with evening pyrexia and hemoptysis",
+    diagnosis: "Suspected Pulmonary Tuberculosis (DOTS Candidate)",
+    advice: "Immediate Sputum CBNAAT / GeneXpert test at Khandala PHC. Isolate in well-ventilated room.",
+  },
+  {
+    token: "SETU-119284",
+    patientName: "Laxmi Bai Shinde",
+    age: 62,
+    gender: "Female",
+    village: "Shirur",
+    ashaName: "Meera Jadhav (ASHA)",
+    specialty: "Orthopedic Surgeon",
+    urgency: "ROUTINE",
+    urgencyColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    symptoms: "Bilateral knee joint swelling, inability to squat, crepitus on weight bearing",
+    aiTriage: "Osteoarthritis Stage 2 Non-Invasive Physio Protocol",
+    chiefComplaint: "Bilateral knee pain and stiffness exacerbated by winter cold",
+    diagnosis: "Bilateral Knee Osteoarthritis (Grade 2 Kellgren-Lawrence)",
+    advice: "Quadriceps strengthening exercises, avoid floor sitting, hot fermentation twice daily.",
+  },
+];
+
 // ─── Main Consultation Page ────────────────────────────────────────
 export function ConsultationPage() {
   const { patientId } = useParams();
   const { patients, activePatient, setActivePatient, refreshPatients } = useOutletContext();
   const { user, role } = useAuth();
   const navigate = useNavigate();
+
+  // Active role station: Doctor vs ASHA perspective
+  const [stationMode, setStationMode] = useState(role === "asha" ? "asha" : "doctor");
+  const [incomingQueue, setIncomingQueue] = useState(DEFAULT_INCOMING_QUEUE);
+  const [activeCallToken, setActiveCallToken] = useState("SETU-849102");
+  const [customTokenInput, setCustomTokenInput] = useState("");
+  const [showArchModal, setShowArchModal] = useState(false);
 
   const [selectedPatientId, setSelectedPatientId] = useState(patientId || activePatient?._id || "");
   const [facilities, setFacilities] = useState([]);
@@ -528,7 +619,7 @@ export function ConsultationPage() {
 
   // Active patient reference
   const currentPatient = patients?.find((p) => p._id === selectedPatientId) || activePatient || patients?.[0];
-  const callRoomId = selectedPatientId || currentPatient?._id || "teleconsult-101";
+  const callRoomId = activeCallToken || selectedPatientId || currentPatient?._id || "teleconsult-101";
 
   // WebRTC Video/Voice Calling Hook
   const localVideoRef = useRef(null);
@@ -549,8 +640,8 @@ export function ConsultationPage() {
     toggleVideo,
   } = useWebRTC({
     roomId: callRoomId,
-    userName: user?.name || "Dr. Prakash Sharma",
-    userRole: "doctor",
+    userName: stationMode === "doctor" ? user?.name || "Dr. Prakash Sharma" : "Meera Jadhav (ASHA)",
+    userRole: stationMode === "doctor" ? "doctor" : "asha",
     autoStart: true,
   });
 
@@ -599,7 +690,32 @@ export function ConsultationPage() {
   const [saving, setSaving] = useState(false);
   const [completedResult, setCompletedResult] = useState(null);
 
+  // Quick Accept Call from Incoming Queue
+  const handleAcceptIncomingCall = (item) => {
+    setActiveCallToken(item.token);
+    setChiefComplaint(item.chiefComplaint || item.symptoms);
+    setDiagnosis(item.diagnosis || "Under Clinical Evaluation");
+    setAdvice(item.advice || "Follow medication regimen and attend weekly checkup.");
+    setClinicalObservations(
+      `Assisted teleconsultation with ${item.ashaName} at ${item.village}. Patient presented with: ${item.symptoms}. AI Triage: ${item.aiTriage}.`
+    );
 
+    // If patient matching name exists, switch
+    const match = patients?.find((p) => p.name?.toLowerCase().includes(item.patientName.toLowerCase().split(" ")[0]));
+    if (match) {
+      setSelectedPatientId(match._id);
+      setActivePatient(match);
+    }
+  };
+
+  // Direct Token Connect
+  const handleDialCustomToken = (e) => {
+    e.preventDefault();
+    if (!customTokenInput.trim()) return;
+    const formatted = customTokenInput.trim().toUpperCase();
+    setActiveCallToken(formatted);
+    setCustomTokenInput("");
+  };
 
   useEffect(() => {
     async function loadFacilities() {
@@ -620,7 +736,6 @@ export function ConsultationPage() {
 
     return () => {};
   }, []);
-
 
   const handleAddMedicine = () => {
     setPrescription([
@@ -687,38 +802,150 @@ export function ConsultationPage() {
 
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto text-left font-sans text-slate-800">
-      {/* Top Header */}
-      <div className="bg-white p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Top Header & Role Station Switcher */}
+      <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800 block mb-1">
-            Module 3.3 · Clinical Telemedicine & AI Scribe
-          </span>
-          <h2 className="text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-800">
+              Module 3.3 · Clinical Telemedicine Command
+            </span>
+            <span className="px-2 py-0.5 bg-slate-900 text-white rounded text-[10px] font-mono font-bold uppercase">
+              {stationMode === "doctor" ? "Doctor Clinical Station" : "ASHA Field Relay Station"}
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#1f2229] tracking-tight">
             Assisted Clinical Teleconsultation
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 font-sans">
-            Medical Officer teleconsultation with ASHA-assisted rural patient video & voice connectivity.
+            {stationMode === "doctor"
+              ? "Accept incoming rural teleconsult requests, examine AI triage summaries, conduct WebRTC video calls, and issue digital prescriptions."
+              : "Sub-centre relay terminal: Facilitate rural patient intake, stream real-time vitals, and connect with on-call Medical Officers."}
           </p>
         </div>
 
-        {/* Patient Selection Dropdown */}
-        <div className="flex flex-col gap-1 w-full sm:w-64 shrink-0">
-          <label className="text-[10px] font-mono uppercase font-bold text-slate-500">Consulting Patient</label>
-          <select
-            value={selectedPatientId}
-            onChange={(e) => {
-              setSelectedPatientId(e.target.value);
-              const p = patients?.find((item) => item._id === e.target.value);
-              if (p) setActivePatient(p);
-            }}
-            className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:border-teal-700"
+        {/* Station Mode Switcher & Explainer Button */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setShowArchModal(true)}
+            className="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer border-none transition-all"
+            title="Understand how ASHA, Patient, and Doctor connect"
           >
-            {patients?.map((p) => (
-              <option key={p._id} value={p._id}>
-                {p.name} ({p.bloodGroup || "O+"} · {p.village} · {p.age}y)
-              </option>
-            ))}
-          </select>
+            <Sparkles className="w-3.5 h-3.5 text-teal-700" />
+            <span>How It Connects</span>
+          </button>
+
+          <div className="bg-[#FAF7F2] border border-[#D3D4C0] p-1 rounded-xl flex text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setStationMode("doctor")}
+              className={`px-3 py-1.5 rounded-lg cursor-pointer border-none transition-all ${
+                stationMode === "doctor" ? "bg-[#1f2229] text-white shadow-xs" : "bg-transparent text-slate-600"
+              }`}
+            >
+              Doctor View
+            </button>
+            <button
+              type="button"
+              onClick={() => setStationMode("asha")}
+              className={`px-3 py-1.5 rounded-lg cursor-pointer border-none transition-all ${
+                stationMode === "asha" ? "bg-teal-800 text-white shadow-xs" : "bg-transparent text-slate-600"
+              }`}
+            >
+              ASHA View
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── INCOMING TELECONSULTATION CALL RADAR (DOCTOR VIEW) ─── */}
+      <div className="bg-white rounded-3xl border border-[#D3D4C0] p-6 shadow-xs flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D3D4C0]/60">
+          <div className="flex items-center gap-2.5">
+            <div className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
+            <h3 className="font-serif font-bold text-base text-slate-900">
+              Incoming Teleconsultation Queue & AI Triage Stream
+            </h3>
+            <span className="px-2.5 py-0.5 bg-rose-50 border border-rose-200 text-rose-700 text-[10px] font-mono font-bold rounded-full uppercase">
+              {incomingQueue.length} Calls Pending
+            </span>
+          </div>
+
+          {/* Quick Token Dialer Input */}
+          <form onSubmit={handleDialCustomToken} className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Paste Token (e.g. SETU-123456)"
+              value={customTokenInput}
+              onChange={(e) => setCustomTokenInput(e.target.value)}
+              className="px-3 py-1.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-xl text-xs font-mono uppercase focus:outline-none focus:border-teal-700"
+            />
+            <button
+              type="submit"
+              className="px-3 py-1.5 bg-[#1f2229] hover:bg-teal-900 text-white rounded-xl text-xs font-bold cursor-pointer border-none transition-all flex items-center gap-1"
+            >
+              <Radio className="w-3.5 h-3.5 text-teal-400" />
+              <span>Connect Token</span>
+            </button>
+          </form>
+        </div>
+
+        {/* Incoming Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {incomingQueue.map((item) => {
+            const isCurrentlyActive = activeCallToken === item.token;
+            return (
+              <div
+                key={item.token}
+                className={`p-4 rounded-2xl border transition-all text-left flex flex-col justify-between gap-3 ${
+                  isCurrentlyActive
+                    ? "bg-teal-50/60 border-teal-700 shadow-xs"
+                    : "bg-[#FAF7F2]/60 border-[#D3D4C0] hover:bg-[#FAF7F2]"
+                }`}
+              >
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h4 className="font-serif font-bold text-sm text-slate-900">{item.patientName}</h4>
+                        <span className="text-[11px] text-slate-500 font-mono">({item.age}y, {item.gender})</span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-mono block mt-0.5">
+                        📍 {item.village} · Via {item.ashaName}
+                      </span>
+                    </div>
+
+                    <span className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded-md border uppercase ${item.urgencyColor}`}>
+                      {item.urgency}
+                    </span>
+                  </div>
+
+                  <div className="p-2 bg-white/80 rounded-xl border border-[#D3D4C0]/50 text-[11px] text-slate-700 leading-snug">
+                    <strong className="text-teal-900 font-sans block text-[10px] uppercase font-mono tracking-wide">
+                      AI Triage: {item.aiTriage}
+                    </strong>
+                    <span className="text-slate-600 line-clamp-2 mt-0.5">{item.symptoms}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-[#D3D4C0]/50 text-[10px] font-mono">
+                  <span className="font-bold text-slate-700">{item.token}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleAcceptIncomingCall(item)}
+                    className={`px-3 py-1.5 rounded-xl font-bold text-xs cursor-pointer border-none transition-all flex items-center gap-1 ${
+                      isCurrentlyActive
+                        ? "bg-emerald-700 text-white"
+                        : "bg-[#1f2229] hover:bg-teal-900 text-white"
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{isCurrentlyActive ? "Call Connected" : "Accept Call"}</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -1180,6 +1407,86 @@ export function ConsultationPage() {
           )}
         </div>
       </div>
+
+      {/* ─── HOW TELECONSULT CONNECTIVITY WORKS MODAL ─── */}
+      {showArchModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl flex flex-col gap-6 text-left animate-fadeIn">
+            <div className="flex items-center justify-between pb-3 border-b border-[#D3D4C0]/60">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center font-bold">
+                  <Stethoscope className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-serif font-bold text-slate-900">
+                    How Setu Connects Patient, ASHA & Doctor
+                  </h3>
+                  <span className="text-[11px] font-mono text-slate-500">
+                    3-Way Tele-Relay Protocol with Real-Time Triage
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowArchModal(false)}
+                className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold cursor-pointer border-none"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="p-4 bg-slate-50 rounded-2xl flex flex-col gap-2 border border-slate-200">
+                <div className="w-6 h-6 rounded-full bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+                  1
+                </div>
+                <h4 className="font-serif font-bold text-xs text-slate-900">Rural Patient & ASHA Intake</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed font-sans">
+                  Patient gives symptoms at home/sub-centre. AI analyzes triage level and generates encrypted Token Code (e.g. <code>SETU-849102</code>).
+                </p>
+              </div>
+
+              <div className="p-4 bg-teal-50/60 rounded-2xl flex flex-col gap-2 border border-teal-200">
+                <div className="w-6 h-6 rounded-full bg-teal-800 text-white font-mono font-bold text-xs flex items-center justify-center">
+                  2
+                </div>
+                <h4 className="font-serif font-bold text-xs text-teal-950">Setu Tele-Routing Engine</h4>
+                <p className="text-[11px] text-teal-900 leading-relaxed font-sans">
+                  The request streams instantly to the on-call Medical Officer's <strong>Incoming Call Radar</strong> with severity badge and symptom digest.
+                </p>
+              </div>
+
+              <div className="p-4 bg-emerald-50 rounded-2xl flex flex-col gap-2 border border-emerald-200">
+                <div className="w-6 h-6 rounded-full bg-emerald-800 text-white font-mono font-bold text-xs flex items-center justify-center">
+                  3
+                </div>
+                <h4 className="font-serif font-bold text-xs text-emerald-950">Doctor Acceptance & Sync</h4>
+                <p className="text-[11px] text-emerald-900 leading-relaxed font-sans">
+                  Doctor clicks <strong>"Accept Call"</strong> to start HD WebRTC video & AI scribe. Signed prescription syncs back to ASHA & Patient SMS.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-[#FAF7F2] rounded-2xl border border-[#D3D4C0] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="font-mono text-[11px] text-slate-700">
+                  Doctor can also paste any Token directly into the <strong>Quick Token Dialer</strong>.
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowArchModal(false)}
+                className="px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-xs cursor-pointer border-none shadow-xs"
+              >
+                Got It
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
