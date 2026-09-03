@@ -16,6 +16,10 @@ import {
   Clock,
   MapPin,
   Phone,
+  ScrollText,
+  Sparkles,
+  ChevronDown,
+  Mic,
 } from "lucide-react";
 
 export function PatientRecordPage() {
@@ -28,6 +32,9 @@ export function PatientRecordPage() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("all");
   const [expandedEntryId, setExpandedEntryId] = useState(null);
+  const [transcripts, setTranscripts] = useState([]);
+  const [expandedTranscriptId, setExpandedTranscriptId] = useState(null);
+  const [loadingTranscripts, setLoadingTranscripts] = useState(false);
 
   const currentId = patientId || activePatient?._id || patients?.[0]?._id;
 
@@ -49,7 +56,24 @@ export function PatientRecordPage() {
       }
     }
 
+    async function loadTranscripts() {
+      if (!currentId) return;
+      setLoadingTranscripts(true);
+      try {
+        const res = await api.get(`/transcripts/patient/${currentId}`);
+        if (res.data?.data) {
+          setTranscripts(res.data.data);
+        }
+      } catch (err) {
+        // Transcripts may not exist yet — graceful fallback
+        console.log("No transcripts available for patient");
+      } finally {
+        setLoadingTranscripts(false);
+      }
+    }
+
     loadTimeline();
+    loadTranscripts();
   }, [currentId]);
 
   const filteredTimeline = timeline.filter((entry) => {
@@ -109,11 +133,10 @@ export function PatientRecordPage() {
       <div className="bg-white border border-[#D3D4C0] rounded-3xl p-7 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div
-            className={`w-14 h-14 rounded-2xl border-2 border-dashed flex items-center justify-center text-base font-bold shrink-0 ${
-              isHighRisk
+            className={`w-14 h-14 rounded-2xl border-2 border-dashed flex items-center justify-center text-base font-bold shrink-0 ${isHighRisk
                 ? "border-rose-400 bg-rose-50 text-rose-800"
                 : "border-[#D3D4C0] bg-[#FAF7F2] text-slate-800"
-            }`}
+              }`}
           >
             {getInitials(patient.name)}
           </div>
@@ -187,15 +210,15 @@ export function PatientRecordPage() {
                 { id: "prescription", label: "Prescriptions" },
                 { id: "lab", label: "Labs" },
                 { id: "immunization", label: "Vaccines" },
+                { id: "transcripts", label: `Transcripts (${transcripts.length})` },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer border ${
-                    activeFilter === tab.id
+                  className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all cursor-pointer border ${activeFilter === tab.id
                       ? "bg-[#1f2229] text-white border-[#1f2229] shadow-xs font-bold"
                       : "bg-transparent text-slate-600 border-transparent hover:bg-[#FAF7F2]"
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -291,7 +314,7 @@ export function PatientRecordPage() {
           </div>
         </div>
 
-        {/* Right Sidebar: Vitals & Contacts (4 cols) */}
+        {/* Right Sidebar: Vitals, Contacts & Transcripts (4 cols) */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           <div className="bg-white p-6 rounded-3xl border border-[#D3D4C0] shadow-xs flex flex-col gap-3">
             <span className="text-[10px] font-mono font-bold uppercase text-slate-400">Latest Vitals Reading</span>
@@ -320,6 +343,118 @@ export function PatientRecordPage() {
                   {patient.vitalsLatest?.bloodSugar || 110} <span className="text-[10px] font-normal text-slate-500">mg/dL</span>
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* Call Transcripts Panel */}
+          <div className="bg-white rounded-3xl border border-[#D3D4C0] shadow-xs overflow-hidden">
+            <div className="bg-gradient-to-r from-[#1f2229] to-[#2d3140] px-5 py-3.5 flex items-center gap-3">
+              <div className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center">
+                <ScrollText className="w-3.5 h-3.5 text-teal-400" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white">Call Transcripts</h4>
+                <p className="text-[9px] text-slate-400 font-mono">
+                  {transcripts.length} recorded session{transcripts.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
+
+            <div className="max-h-[400px] overflow-y-auto">
+              {loadingTranscripts ? (
+                <div className="p-6 flex items-center justify-center">
+                  <div className="w-5 h-5 rounded-full border-2 border-teal-700 border-t-transparent animate-spin" />
+                </div>
+              ) : transcripts.length === 0 ? (
+                <div className="p-6 text-center">
+                  <Mic className="w-6 h-6 text-slate-300 mx-auto mb-2" />
+                  <p className="text-[11px] text-slate-400 font-mono">No call transcripts recorded yet.</p>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  {transcripts.map((t) => {
+                    const isExpanded = expandedTranscriptId === t._id;
+                    const dateObj = new Date(t.createdAt);
+                    const dialogueEntries = t.entries?.filter((e) => e.speaker !== "system") || [];
+
+                    return (
+                      <div key={t._id} className="border-b border-[#D3D4C0]/60 last:border-b-0">
+                        <button
+                          onClick={() => setExpandedTranscriptId(isExpanded ? null : t._id)}
+                          className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#FAF7F2] transition-colors cursor-pointer bg-transparent border-none text-left"
+                        >
+                          <div className={`w-2 h-2 rounded-full shrink-0 ${t.status === "active" ? "bg-red-500 animate-pulse" : "bg-emerald-500"
+                            }`} />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[11px] font-bold text-slate-800 truncate">
+                              {t.callMode?.toUpperCase()} Call · {dialogueEntries.length} exchanges
+                            </div>
+                            <div className="text-[10px] text-slate-500 font-mono">
+                              {dateObj.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}{" "}
+                              at {dateObj.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
+                              {t.doctor?.name && ` · Dr. ${t.doctor.name}`}
+                            </div>
+                          </div>
+                          <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform shrink-0 ${isExpanded ? "rotate-180" : ""
+                            }`} />
+                        </button>
+
+                        {isExpanded && (
+                          <div className="px-4 pb-4 flex flex-col gap-2 animate-fadeIn">
+                            {/* AI Summary */}
+                            {t.summary && (
+                              <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl">
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                  <Sparkles className="w-3 h-3 text-teal-600" />
+                                  <span className="text-[9px] font-mono font-bold text-teal-800 uppercase">AI Clinical Summary</span>
+                                </div>
+                                <p className="text-[11px] text-teal-900 leading-relaxed">{t.summary}</p>
+                              </div>
+                            )}
+
+                            {/* Dialogue Entries */}
+                            <div className="flex flex-col gap-1.5 max-h-[250px] overflow-y-auto">
+                              {dialogueEntries.map((entry, idx) => {
+                                const colors = {
+                                  doctor: { bg: "bg-teal-50", text: "text-teal-800", dot: "bg-teal-500" },
+                                  patient: { bg: "bg-amber-50", text: "text-amber-800", dot: "bg-amber-500" },
+                                  asha: { bg: "bg-violet-50", text: "text-violet-800", dot: "bg-violet-500" },
+                                };
+                                const c = colors[entry.speaker] || colors.patient;
+                                return (
+                                  <div key={idx} className={`${c.bg} rounded-xl px-3 py-2`}>
+                                    <div className="flex items-center gap-1.5 mb-0.5">
+                                      <span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />
+                                      <span className={`text-[9px] font-mono font-bold uppercase ${c.text}`}>
+                                        {entry.speakerName}
+                                      </span>
+                                      <span className="text-[8px] text-slate-400 font-mono ml-auto">
+                                        {new Date(entry.timestamp).toLocaleTimeString("en-IN", {
+                                          hour: "2-digit", minute: "2-digit", second: "2-digit",
+                                        })}
+                                      </span>
+                                    </div>
+                                    <p className="text-[11px] text-slate-700 leading-relaxed">{entry.text}</p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            {/* Stats */}
+                            <div className="flex items-center justify-between text-[9px] font-mono text-slate-400 pt-1.5 border-t border-[#D3D4C0]/40">
+                              <span>Language: {t.language || "en-IN"}</span>
+                              <span>
+                                {t.status === "completed" ? "✓ Finalized" : "● Active"}
+                                {t.durationSeconds > 0 && ` · ${Math.round(t.durationSeconds / 60)}m`}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 

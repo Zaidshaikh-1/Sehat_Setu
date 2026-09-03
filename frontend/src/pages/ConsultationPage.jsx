@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { api } from "../utils/api.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -18,8 +18,392 @@ import {
   AlertCircle,
   FileText,
   ArrowRight,
+  Languages,
+  PauseCircle,
+  PlayCircle,
+  ScrollText,
+  Sparkles,
+  Radio,
 } from "lucide-react";
 
+// ─── Live Transcription Panel Component ────────────────────────────
+function LiveTranscriptionPanel({
+  transcriptId,
+  setTranscriptId,
+  entries,
+  setEntries,
+  isRecording,
+  setIsRecording,
+  patientId,
+  callMode,
+  user,
+}) {
+  const [interimText, setInterimText] = useState("");
+  const [currentSpeaker, setCurrentSpeaker] = useState("doctor");
+  const [language, setLanguage] = useState("en-IN");
+  const [isPaused, setIsPaused] = useState(false);
+  const recognitionRef = useRef(null);
+  const scrollRef = useRef(null);
+
+  // Auto-scroll transcript to bottom
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [entries, interimText]);
+
+  // Initialize Web Speech API
+  const startSpeechRecognition = useCallback(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Speech Recognition is not supported in this browser. Use Chrome.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = language;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const text = event.results[i][0].transcript;
+        const confidence = event.results[i][0].confidence;
+
+        if (event.results[i].isFinal) {
+          const newEntry = {
+            speaker: currentSpeaker,
+            speakerName:
+              currentSpeaker === "doctor"
+                ? user?.name || "Doctor"
+                : currentSpeaker === "asha"
+                  ? "ASHA Worker"
+                  : "Patient",
+            text: text.trim(),
+            confidence: Math.round(confidence * 100) / 100,
+            timestamp: new Date().toISOString(),
+          };
+
+          setEntries((prev) => [...prev, newEntry]);
+          setInterimText("");
+
+          // Send to backend
+          if (transcriptId) {
+            api
+              .post(`/transcripts/${transcriptId}/append`, {
+                speaker: currentSpeaker,
+                speakerName: newEntry.speakerName,
+                text: text.trim(),
+                confidence: newEntry.confidence,
+              })
+              .catch((err) =>
+                console.error("Failed to save transcript entry:", err)
+              );
+          }
+        } else {
+          interim += text;
+        }
+      }
+      setInterimText(interim);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      if (event.error === "not-allowed") {
+        alert("Microphone access denied. Please allow microphone permissions.");
+      }
+    };
+
+    recognition.onend = () => {
+      // Auto-restart if still recording and not paused
+      if (isRecording && !isPaused && recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch (e) {
+          // already started
+        }
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  }, [language, currentSpeaker, transcriptId, user, isRecording, isPaused]);
+
+  // Start Transcription Session
+  const handleStartTranscription = async () => {
+    if (!patientId) {
+      alert("Please select a patient first.");
+      return;
+    }
+
+    try {
+      const res = await api.post("/transcripts/start", {
+        patientId,
+        callMode,
+        language,
+      });
+
+      setTranscriptId(res.data.data._id);
+      setEntries([]);
+      setIsRecording(true);
+      startSpeechRecognition();
+    } catch (err) {
+      console.error("Failed to start transcript:", err);
+      alert("Failed to start transcription session.");
+    }
+  };
+
+  // Stop/Pause
+  const handlePauseResume = () => {
+    if (isPaused) {
+      setIsPaused(false);
+      startSpeechRecognition();
+    } else {
+      setIsPaused(true);
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    }
+  };
+
+  const handleStopTranscription = () => {
+    setIsRecording(false);
+    setIsPaused(false);
+    setInterimText("");
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+  };
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  // Restart recognition when speaker or language changes mid-recording
+  useEffect(() => {
+    if (isRecording && !isPaused && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setTimeout(() => startSpeechRecognition(), 200);
+    }
+  }, [currentSpeaker, language]);
+
+  const speakerColors = {
+    doctor: { bg: "bg-teal-50", border: "border-teal-200", text: "text-teal-800", dot: "bg-teal-500" },
+    patient: { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-800", dot: "bg-amber-500" },
+    asha: { bg: "bg-violet-50", border: "border-violet-200", text: "text-violet-800", dot: "bg-violet-500" },
+    system: { bg: "bg-slate-50", border: "border-slate-200", text: "text-slate-500", dot: "bg-slate-400" },
+  };
+
+  return (
+    <div className="bg-white rounded-3xl border border-[#D3D4C0] shadow-xs overflow-hidden">
+      {/* Panel Header */}
+      <div className="bg-gradient-to-r from-[#1f2229] to-[#2d3140] px-5 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-teal-500/20 flex items-center justify-center">
+            <ScrollText className="w-4 h-4 text-teal-400" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-white font-serif">
+              Live Call Transcription
+            </h4>
+            <p className="text-[10px] text-slate-400 font-mono">
+              {isRecording
+                ? isPaused
+                  ? "⏸ PAUSED"
+                  : "● LIVE — AI-Powered Speech-to-Text"
+                : "Ready to start"}
+            </p>
+          </div>
+        </div>
+
+        {isRecording && (
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`w-2 h-2 rounded-full ${isPaused ? "bg-amber-400" : "bg-red-500 animate-pulse"
+                }`}
+            />
+            <span className="text-[10px] font-mono text-slate-400">
+              {isPaused ? "PAUSED" : "REC"}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Controls Bar */}
+      <div className="border-b border-[#D3D4C0] px-4 py-3 flex flex-wrap items-center gap-2">
+        {/* Speaker Toggle */}
+        <div className="flex bg-[#FAF7F2] rounded-xl p-0.5 text-[10px] font-mono border border-[#D3D4C0]">
+          {["doctor", "patient", "asha"].map((s) => (
+            <button
+              key={s}
+              onClick={() => setCurrentSpeaker(s)}
+              className={`px-3 py-1.5 rounded-lg cursor-pointer border-none font-bold transition-all ${currentSpeaker === s
+                  ? "bg-[#1f2229] text-white shadow-sm"
+                  : "bg-transparent text-slate-500 hover:text-slate-800"
+                }`}
+            >
+              {s === "doctor" ? "🩺 Doctor" : s === "patient" ? "🧑 Patient" : "👩‍⚕️ ASHA"}
+            </button>
+          ))}
+        </div>
+
+        {/* Language Select */}
+        <div className="flex items-center gap-1.5 ml-auto">
+          <Languages className="w-3.5 h-3.5 text-slate-400" />
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            disabled={isRecording}
+            className="text-[10px] font-mono px-2 py-1.5 bg-[#FAF7F2] border border-[#D3D4C0] rounded-lg text-slate-700"
+          >
+            <option value="en-IN">English (IN)</option>
+            <option value="hi-IN">Hindi</option>
+            <option value="ta-IN">Tamil</option>
+            <option value="te-IN">Telugu</option>
+            <option value="bn-IN">Bengali</option>
+            <option value="mr-IN">Marathi</option>
+            <option value="gu-IN">Gujarati</option>
+            <option value="kn-IN">Kannada</option>
+            <option value="ml-IN">Malayalam</option>
+            <option value="or-IN">Odia</option>
+            <option value="pa-IN">Punjabi</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Transcript Entries */}
+      <div
+        ref={scrollRef}
+        className="px-4 py-3 max-h-[320px] min-h-[160px] overflow-y-auto flex flex-col gap-2"
+        style={{ scrollBehavior: "smooth" }}
+      >
+        {entries.length === 0 && !interimText && (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <Radio className="w-8 h-8 text-slate-300 mb-3" />
+            <p className="text-xs text-slate-400 font-mono">
+              {isRecording
+                ? "Listening... Speak into the microphone."
+                : "Start transcription to capture the consultation dialogue."}
+            </p>
+          </div>
+        )}
+
+        {entries.map((entry, idx) => {
+          const colors = speakerColors[entry.speaker] || speakerColors.system;
+          return (
+            <div
+              key={idx}
+              className={`${colors.bg} ${colors.border} border rounded-2xl px-3.5 py-2.5 animate-fadeIn`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                <span
+                  className={`text-[10px] font-mono font-bold uppercase ${colors.text}`}
+                >
+                  {entry.speakerName}
+                </span>
+                <span className="text-[9px] text-slate-400 font-mono ml-auto">
+                  {new Date(entry.timestamp).toLocaleTimeString("en-IN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </span>
+                {entry.confidence < 0.7 && (
+                  <span className="text-[8px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-mono">
+                    LOW CONF
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-800 leading-relaxed">
+                {entry.text}
+              </p>
+            </div>
+          );
+        })}
+
+        {/* Interim (live/in-progress) text */}
+        {interimText && (
+          <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl px-3.5 py-2.5 animate-pulse">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-ping" />
+              <span className="text-[10px] font-mono font-bold uppercase text-slate-500">
+                listening...
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 italic">{interimText}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Action Bar */}
+      <div className="border-t border-[#D3D4C0] px-4 py-3 flex items-center gap-2">
+        {!isRecording ? (
+          <button
+            onClick={handleStartTranscription}
+            className="flex-1 py-2.5 bg-gradient-to-r from-teal-700 to-teal-800 hover:from-teal-800 hover:to-teal-900 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+          >
+            <Mic className="w-4 h-4" />
+            <span>Start Live Transcription</span>
+            <Sparkles className="w-3 h-3 text-teal-300" />
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={handlePauseResume}
+              className={`flex-1 py-2.5 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border-none ${isPaused
+                  ? "bg-teal-700 hover:bg-teal-800 text-white"
+                  : "bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300"
+                }`}
+            >
+              {isPaused ? (
+                <>
+                  <PlayCircle className="w-4 h-4" /> Resume
+                </>
+              ) : (
+                <>
+                  <PauseCircle className="w-4 h-4" /> Pause
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleStopTranscription}
+              className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
+            >
+              <MicOff className="w-4 h-4" />
+              <span>Stop Recording</span>
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Stats Footer */}
+      {entries.length > 0 && (
+        <div className="bg-[#FAF7F2] border-t border-[#D3D4C0] px-4 py-2 flex items-center justify-between text-[10px] font-mono text-slate-500">
+          <span>
+            {entries.length} entries · {entries.filter((e) => e.speaker === "doctor").length} doctor · {entries.filter((e) => e.speaker === "patient").length} patient
+          </span>
+          <span className="flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-teal-500" />
+            AI summary generated on finalize
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Main Consultation Page ────────────────────────────────────────
 export function ConsultationPage() {
   const { patientId } = useParams();
   const { patients, activePatient, setActivePatient, refreshPatients } = useOutletContext();
@@ -31,6 +415,13 @@ export function ConsultationPage() {
   const [mode, setMode] = useState("video");
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
+
+  // Transcript state
+  const [transcriptId, setTranscriptId] = useState(null);
+  const [transcriptEntries, setTranscriptEntries] = useState([]);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [transcriptSummary, setTranscriptSummary] = useState("");
+  const [showTranscriptPanel, setShowTranscriptPanel] = useState(true);
 
   const [chiefComplaint, setChiefComplaint] = useState("Severe pedal edema and persistent headache in 28th week gestation");
   const [clinicalObservations, setClinicalObservations] = useState("Assisted teleconsultation conducted with ASHA Meera present with patient. Mild pallor noted, bilateral pitting edema. Fetal heart rate regular at 142 bpm.");
@@ -112,7 +503,22 @@ export function ConsultationPage() {
       };
 
       const res = await api.post("/consultations", payload);
-      setCompletedResult(res.data.data);
+      const consultationData = res.data.data;
+      setCompletedResult(consultationData);
+
+      // Finalize transcript with consultation link
+      if (transcriptId) {
+        try {
+          const finRes = await api.patch(`/transcripts/${transcriptId}/finalize`, {
+            consultationId: consultationData.consultation._id,
+            durationSeconds: consultationData.consultation.durationMinutes * 60,
+          });
+          setTranscriptSummary(finRes.data.data.summary || "");
+        } catch (err) {
+          console.error("Failed to finalize transcript:", err);
+        }
+      }
+
       if (refreshPatients) await refreshPatients();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to finalize consultation");
@@ -160,8 +566,9 @@ export function ConsultationPage() {
 
       {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left: Video Feed Placeholder (5 cols) */}
+        {/* Left: Video Feed + Transcription (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Video Panel */}
           <div className="bg-[#1f2229] border border-slate-800 rounded-3xl p-6 shadow-xs flex flex-col justify-between min-h-[360px] text-white">
             <div className="flex items-center justify-between">
               <span className="px-3 py-1 bg-teal-950 border border-teal-700 text-teal-300 rounded-xl text-[10px] font-mono font-bold">
@@ -207,23 +614,46 @@ export function ConsultationPage() {
             <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-800">
               <button
                 onClick={() => setIsAudioMuted(!isAudioMuted)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
-                  isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
-                }`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${isAudioMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
               >
                 {isAudioMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
 
               <button
                 onClick={() => setIsVideoMuted(!isVideoMuted)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${
-                  isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
-                }`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${isVideoMuted ? "bg-rose-600 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
               >
                 {isVideoMuted ? <VideoOff className="w-4 h-4" /> : <Video className="w-4 h-4" />}
               </button>
+
+              {/* Toggle Transcript Panel */}
+              <button
+                onClick={() => setShowTranscriptPanel(!showTranscriptPanel)}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none transition-all ${showTranscriptPanel ? "bg-teal-600 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
+                title="Toggle Transcription Panel"
+              >
+                <ScrollText className="w-4 h-4" />
+              </button>
             </div>
           </div>
+
+          {/* Live Transcription Panel */}
+          {showTranscriptPanel && (
+            <LiveTranscriptionPanel
+              transcriptId={transcriptId}
+              setTranscriptId={setTranscriptId}
+              entries={transcriptEntries}
+              setEntries={setTranscriptEntries}
+              isRecording={isTranscribing}
+              setIsRecording={setIsTranscribing}
+              patientId={selectedPatientId || currentPatient?._id}
+              callMode={mode}
+              user={user}
+            />
+          )}
         </div>
 
         {/* Right: Clinical Note Form (7 cols) */}
@@ -416,6 +846,7 @@ export function ConsultationPage() {
             </button>
           </form>
 
+          {/* Completion Result */}
           {completedResult && (
             <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col gap-2 text-left keep-note animate-fadeIn">
               <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs">
@@ -427,6 +858,22 @@ export function ConsultationPage() {
                   Referral Ticket Dispatched: <strong>{completedResult.referral.referralCode}</strong> (Urgency: {completedResult.referral.urgency.toUpperCase()})
                 </div>
               )}
+
+              {/* Transcript Summary */}
+              {transcriptSummary && (
+                <div className="mt-2 p-3 bg-teal-50 border border-teal-200 rounded-xl">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+                    <span className="text-[10px] font-mono font-bold text-teal-800 uppercase">
+                      AI Transcript Summary
+                    </span>
+                  </div>
+                  <p className="text-xs text-teal-900 leading-relaxed">
+                    {transcriptSummary}
+                  </p>
+                </div>
+              )}
+
               <div className="flex gap-2 mt-1">
                 <button
                   onClick={() => navigate(`/referrals`)}

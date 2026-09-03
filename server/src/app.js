@@ -47,6 +47,8 @@ import followupRoutes from "./routes/followup.routes.js";
 import emergencyRoutes from "./routes/emergency.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import healthRoutes from "./routes/health.routes.js";
+import transcriptRoutes from "./routes/transcript.routes.js";
+import chatbotRoutes from "./routes/chatbot.routes.js";
 
 // Mount routes
 app.use("/api/auth", authRoutes);
@@ -60,6 +62,8 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/followups", followupRoutes);
 app.use("/api/emergency", emergencyRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/transcripts", transcriptRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 app.use("/health", healthRoutes);
 
 // Global Error Handler

@@ -6,6 +6,7 @@ import { api } from "../../utils/api.js";
 import { getSocket } from "../../utils/socket.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { CheckCircle2, ShieldAlert } from "lucide-react";
+import { ChatbotWidget } from "./ChatbotWidget.jsx";
 
 export function AppLayout() {
   const [patients, setPatients] = useState([]);
@@ -89,11 +90,10 @@ export function AppLayout() {
       {/* Real-time Toast Alert */}
       {realtimeAlert && (
         <div
-          className={`fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl flex items-start gap-3 border animate-fadeIn max-w-sm ${
-            realtimeAlert.type === "emergency"
+          className={`fixed top-4 right-4 z-50 p-4 rounded-2xl shadow-2xl flex items-start gap-3 border animate-fadeIn max-w-sm ${realtimeAlert.type === "emergency"
               ? "bg-rose-950 text-white border-rose-600"
               : "bg-slate-900 text-white border-teal-500"
-          }`}
+            }`}
         >
           {realtimeAlert.type === "emergency" ? (
             <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
@@ -122,6 +122,9 @@ export function AppLayout() {
           <Outlet context={{ patients, activePatient, setActivePatient, refreshPatients: fetchPatients }} />
         </main>
       </div>
+
+      {/* AI Chatbot Floating Widget */}
+      <ChatbotWidget />
     </div>
   );
 }
