@@ -16,7 +16,7 @@ export const translations = {
 
     // Hero Section
     heroBadge: "SIH 2026 Problem Statement · PS Ref: SIH21633",
-    heroHeadline: "One patient. One ABHA record. Every rural facility connected.",
+    heroHeadline: "One patient. One ASHA record. Every rural facility connected.",
     heroSubhead: "Setu is the integrated care bridge connecting frontline ASHA workers, Primary Health Centres (PHCs), and District Hospitals with offline triage, assisted teleconsultation, and closed-loop referral tracking.",
     heroCtaContact: "Get Health Guidance (AI Doctor Connect)",
     heroCtaConsole: "Launch Operational Console",
