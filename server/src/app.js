@@ -51,6 +51,7 @@ import healthRoutes from "./routes/health.routes.js";
 import transcriptRoutes from "./routes/transcript.routes.js";
 import chatbotRoutes from "./routes/chatbot.routes.js";
 import symptomAnalysisRoutes from "./routes/symptomAnalysis.routes.js";
+import qrRoutes from "./routes/qr.routes.js";
 
 // Mount routes
 app.use("/api/auth", authRoutes);
@@ -58,6 +59,7 @@ app.use("/api/patients", patientRoutes);
 app.use("/api/triage", triageRoutes);
 app.use("/api/consultations", consultationRoutes);
 app.use("/api/referrals", referralRoutes);
+app.use("/api/qr", qrRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/diagnostics", diagnosticRoutes);
 app.use("/api/medicines", medicineRoutes);
