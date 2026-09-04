@@ -11,6 +11,7 @@ import { PrivacyPage } from "./pages/PrivacyPage.jsx";
 import { TermsPage } from "./pages/TermsPage.jsx";
 import { JoinCallPage } from "./pages/JoinCallPage.jsx";
 import { ContactAshaPage } from "./pages/ContactAshaPage.jsx";
+import { QrScanPage } from "./pages/QrScanPage.jsx";
 
 // Protected Console Pages
 import { PatientListPage } from "./pages/PatientListPage.jsx";
@@ -40,6 +41,7 @@ export function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/call/:roomId" element={<JoinCallPage />} />
+          <Route path="/scan/:referralId" element={<QrScanPage />} />
 
           {/* Protected Console Workspace */}
           <Route element={<AppLayout />}>
