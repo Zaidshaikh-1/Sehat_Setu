@@ -3,7 +3,7 @@ dotenv.config();
 
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import { DB_NAME } from "./dbname.js";
+import { getDbName, resolveUri } from "./db.connection.js";
 import { User } from "../models/user.models.js";
 import { Facility } from "../models/facility.models.js";
 import { Patient } from "../models/patient.models.js";
@@ -18,9 +18,9 @@ import { Followup } from "../models/followup.models.js";
 
 async function seedDatabase() {
   try {
-    const uri = process.env.MONGODB_URI;
-    console.log(`Connecting to MongoDB for seeding (${DB_NAME})...`);
-    await mongoose.connect(`${uri}/${DB_NAME}`);
+    const uri = resolveUri();
+    console.log(`Connecting to MongoDB for seeding (${getDbName(uri)})...`);
+    await mongoose.connect(uri);
     console.log("Connected to MongoDB!");
 
     // Clear existing collections
